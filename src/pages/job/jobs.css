@@ -1,0 +1,8 @@
+@media print {
+    #root .managejobs .printhidden {
+        display: absolute;
+
+        height: 0px;
+        overflow: hidden;
+    }
+}

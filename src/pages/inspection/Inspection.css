@@ -1,0 +1,31 @@
+.inspection{
+    display: grid;
+    /* max-width: 200mm; */
+    min-height: 290mm;
+    grid-template-rows: min-content auto;
+    /* deleteme */
+    /* background-color:chartreuse;  */
+    margin: 3mm;
+    
+}
+.garage_info{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+
+    column-gap: 1rem;
+}
+.inspection_header{
+    /* border-solid border-b-2  border-0 grid grid-cols-[auto,min-content] */
+    display: grid;
+    grid-template-columns: auto min-content;
+    border-bottom: double 4px gray;
+}
+.inspection_header .vehicle_info{
+    border-left: 1px gray dashed;
+    display: grid;
+    grid-template-columns: auto 4rem;
+    .additional_info:last-child{
+        border-bottom: none;
+
+    }
+}

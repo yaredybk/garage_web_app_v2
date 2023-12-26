@@ -1,0 +1,94 @@
+.btn-cyn {
+    /* margin-left: auto;
+    margin-right: auto; */
+    padding: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background-color: rgb(6, 223, 223);
+    border: none;
+    border-radius: 0.3rem;
+    font-weight: bold;
+}
+.btn-blue {
+    /* margin-left: auto;
+    margin-right: auto; */
+    padding: 0.5rem 1rem;
+    background-color: rgb(88, 88, 227);
+    color: aliceblue;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    min-height: 2rem;
+}
+.btn-red {
+    /* margin-left: auto;
+    margin-right: auto; */
+    padding: 0.3rem 1rem;
+    background-color: rgb(246, 95, 95);
+    color: aliceblue;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: bold;
+}
+.mybtn {
+    /* margin-left: auto;
+    margin-right: auto; */
+    padding: 0.3rem 1rem;
+    /* font-size: 0.8rem;
+    line-height: 1; */
+    color: aliceblue;
+    border: none;
+    border-radius: 0.3rem;
+    font-weight: bold;
+}
+.mybtn.red {
+    background-color: rgb(246, 95, 95);
+}
+.mybtn.green {
+    background-color: rgb(2, 193, 2);
+}
+.mybtn.red {
+    background-color: rgb(246, 95, 95);
+}
+.mybtn.btn-blue {
+    background-color: rgb(88, 88, 227);
+}
+
+.btn-basic {
+    padding: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background-color: rgb(73, 73, 238);
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: bold;
+}
+button:hover {
+    filter: hue-rotate(20deg);
+    box-shadow: 0px 0px 10px rgb(65, 65, 65);
+    /* color: white; */
+}
+button {
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    place-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+button:disabled,
+button.mybtn:disabled {
+    transition: all ease-in 0.1s 0.3;
+    background-color: gray;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+@media print {
+    #root button,
+    #root a,
+    #root button.mybtn,
+    #root button.btn-blue,
+    #root button.btn-red {
+        display: none;
+    }
+}

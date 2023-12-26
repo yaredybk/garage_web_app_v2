@@ -1,0 +1,154 @@
+[
+    {
+        "enabled":true,
+        "system": "Engine System",
+        "description": "Converts fuel into power through combustion and manages various aspects like air intake, exhaust gas removal, temperature control, friction reduction, and fuel delivery.",
+        "units":["%","bar"],
+        "subsystems": [
+            "Engine compression",
+            "P1 compression",
+            "P2 compression",
+            "P3 compression",
+            "P4 compression",
+            "Trubo charger",
+            "Combustion Chamber",
+            "Intake System",
+            "Exhaust System",
+            "Cooling System",
+            "Lubrication System",
+            "Fuel Injection System"
+        ]
+    },
+    {
+        "enabled":false,
+        "system": "Drivetrain System",
+        "description": "Transfers engine power to the wheels, including gear changes, power distribution between wheels, and rotation management.",
+        "units":["%"],
+        "subsystems": [
+            "Transmission",
+            "Driveshaft",
+            "Axles",
+            "Wheels",
+            "Differential"
+        ]
+    },
+    {
+        "enabled":false,
+        "system": "Body condition",
+        "description": "Transfers engine power to the wheels, including gear changes, power distribution between wheels, and rotation management.",
+        "units":["%"],
+        "subsystems": [
+            "Hood",
+            "Door",
+            "Roof",
+            "Bumber",
+            "Fender"
+        ]
+    },
+    {
+        "enabled":false,
+        "system": "Chassis System",
+        "description": "Provides structural support, houses components and passengers, absorbs bumps and maintains tire contact with the road.",
+        "units":["%"],
+        "subsystems": ["Frame", "Body", "Suspension", "Wheels", "Tires"]
+    },
+    {
+        "enabled":true,
+        "system": "Electrical System",
+        "description": "Provides electrical power to various components, maintains voltage levels, starts the engine, and distributes power through wiring and protection devices.",
+        "units":["%"],
+        "subsystems": [
+            "Battery",
+            "Alternator",
+            "Starter",
+            "Wiring Harness",
+            "Fuses",
+            "Relays",
+            "Lights",
+            "Wipers",
+            "Radio"
+        ]
+    },
+    {
+        "enabled":false,
+        "system": "Fuel System",
+        "description": "Stores, delivers, and filters fuel for efficient combustion in the engine.",
+        "units":["%"],
+        "subsystems": [
+            "Fuel Tank",
+            "Fuel Pump",
+            "Fuel Filter",
+            "Fuel Injectors",
+            "Fuel Lines"
+        ]
+    },
+    {
+        "enabled":false,
+        "system": "Braking System",
+        "description": "Slows down and stops the car through friction at the wheels, controlled by hydraulic pressure and components.",
+        "units":["%"],
+        "subsystems": [
+            "Brakes",
+            "Brake Pads",
+            "Brake Rotors",
+            "Brake Fluid",
+            "Master Cylinder",
+            "Wheel Cylinders"
+        ]
+    },
+    {
+        "enabled":true,
+        "system": "Steering System",
+        "description": "Allows the driver to control the direction of the car by turning the wheels through a mechanical linkage system.",
+        "units":["%"],
+        "subsystems": [
+            "Steering Wheel",
+            "Steering Column",
+            "Steering Gear",
+            "Tie Rods",
+            "Ball Joints"
+        ]
+    },
+    {
+        "enabled":false,
+        "system": "Suspension System",
+        "description": "Absorbs bumps and maintains a smooth ride by controlling wheel movement and dampening vibrations.",
+        "units":["%"],
+        "subsystems": [
+            "Springs",
+            "Shocks",
+            "Struts",
+            "Control Arms",
+            "Bushings"
+        ]
+    },
+    {
+        "enabled":false,
+        "system": "Climate Control System",
+        "description": "Regulates cabin temperature and humidity for comfort, including cooling, heating, and removing moisture from windows.",
+        "units":["%"],
+        "subsystems": [
+            "Air Conditioner",
+            "Heater",
+            "Defroster",
+            "Blower Motor",
+            "Evaporator",
+            "Condenser",
+            "Compressor"
+        ]
+    },
+    {
+        "enabled":true,
+        "system": "Safety Systems",
+        "description": "Protects occupants in case of accidents through various passive and active systems like airbags, restraining devices, collision absorption structures, and electronic driving assistance features.",
+        "units":["%"],
+        "subsystems": [
+            "Airbags",
+            "Seat Belts",
+            "Crumple Zones",
+            "Anti-Lock Braking System (ABS)",
+            "Traction Control System (TCS)",
+            "Electronic Stability Control (ESC)"
+        ]
+    }
+]

@@ -1,0 +1,12 @@
+#report_page {
+    backdrop-filter: blur(2px);
+}
+
+#report_page {
+    .table-title {
+        /* max-md:flex-row flex-col flex  bg-white bg-opacity-70  relative */
+        z-index: 8;
+        backdrop-filter: blur(2px);
+        background-color: aliceblue;
+    }
+}

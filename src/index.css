@@ -1,0 +1,74 @@
+@tailwind utilities;
+@font-face {
+    font-family: "license";
+    src: url("/public/fonts/licensePlate2.ttf");
+    src: url("/public/fonts/licensePlate2.ttf") format("truetype");
+    /* font-display: swap; */
+}
+.tiketnumber{
+    font-family: "license",'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: red;
+    background-color: white;
+    padding: 2px;
+    font-size: 1.5rem;
+}
+:root {
+    /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif, license; */
+    /* line-height: 1.5; */
+    /* font-weight: 400; */
+
+    /* color-scheme: light dark; */
+    /* color: rgba(255, 255, 255, 0.87); */
+    /* background-color: #242424; */
+
+    /* font-synthesis: none; */
+    /* text-rendering: optimizeLegibility; */
+    /* -webkit-font-smoothing: antialiased; */
+    /* -moz-osx-font-smoothing: grayscale; */
+    /* -webkit-text-size-adjust: 100%; */
+}
+body {
+    scrollbar-width: thin;
+    scrollbar-color: #f00 #00f;
+    margin: 0px;
+    padding: 0px;
+}
+h1 {
+    text-decoration: underline rgb(164, 164, 164) 1px;
+    font-size: 2rem;
+    line-height: 1.1;
+    margin-top: 0.8rem;
+    margin-bottom: 0.8rem;
+}
+h2,
+h3,
+h4,
+h5 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+@media (prefers-color-scheme: light) {
+    :root {
+        color: #0c0e10;
+        background-color: #ffffff;
+    }
+}
+
+/* scroll bar */
+/* Make the scrollbar thin */
+::-webkit-scrollbar {
+    width: 8px;
+    padding: 2px;
+}
+
+/* Make the scrollbar track colorful */
+::-webkit-scrollbar-track {
+    background-color: rgb(0, 0, 255, 0.3);
+}
+
+/* Make the scrollbar thumb colorful */
+::-webkit-scrollbar-thumb {
+    background-color: rgb(0, 0, 109);
+    width: 4px;
+    padding: 2px;
+}

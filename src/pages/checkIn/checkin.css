@@ -1,0 +1,21 @@
+.carpartselector {
+    margin: 0px;
+}
+#thecarimage {
+    width: 800px;
+    margin: 0px;
+    aspect-ratio: 1.7;
+}
+.carimagecon .point {
+    transform: translateX(-50px);
+}
+.defectstable {
+    /* background-color: aqua; */
+    td:first-child {
+        overflow: hidden;
+        width: 1.5rem;
+        max-width: 1.5rem;
+        text-align: center;
+        margin: 0px;
+    }
+}

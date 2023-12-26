@@ -1,0 +1,43 @@
+div.mini_pop_window {
+    box-shadow: 0px 4px 8px #000000;
+    z-index: 1000;
+    top: 3.5rem;
+    right: 1.8rem;
+    padding: 4px;
+    margin: 0px;
+    border-radius: 0.2rem;
+    border-top-right-radius: 2.9rem;
+    position: fixed;
+    min-height: 2rem;
+    min-width: 10rem;
+    max-width: 75vw;
+    backdrop-filter: blur(3px);
+    border-top: solid rgb(0, 0, 0) 2px;
+    border-right: solid rgb(0, 0, 0) 2px;
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    transform: translateX(10%);
+    pointer-events: none;
+    z-index: -10;
+    transition: transform ease-in 0.2s;
+}
+div.mini_pop_window.open {
+    backdrop-filter: blur(5px);
+    pointer-events: all;
+    z-index: 10;
+    transition: transform ease-out 0.3s;
+    /* transition: opacity ease-in 0.3s; */
+    transform: translateX(-1%);
+    opacity: 0.95;
+}
+div.mini_pop_window.green {
+    background-color: rgb(216, 255, 158);
+    color: rgb(66, 109, 0);
+    border-color: rgb(120, 197, 4);
+}
+div.mini_pop_window.open.red,
+div.mini_pop_window.open.null {
+    background-color: rgb(255, 194, 177);
+    color: rgb(97, 21, 0);
+    border-color: rgb(162, 35, 0);
+}

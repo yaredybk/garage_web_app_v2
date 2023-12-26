@@ -1,0 +1,177 @@
+html {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
+    /* font-family: Georgia, "Times New Roman", Times, serif; */
+    /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+    /* font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif; */
+    letter-spacing: 1px;
+    scrollbar-gutter: stable;
+    /* font-family: Verdana, sans-serif; */
+    /* background-color: #9c38ee;
+    background-color: #9c38ee; */
+}
+@media print {
+    html {
+        scrollbar-gutter: unset;
+    }
+}
+body {
+    zoom: 1;
+    /* max-width: min(50rem , 100%); */
+
+    /* transform-origin: 0 0; */
+}
+#root {
+    /* max-width: 1280px; */
+    /* background-color: aqua; */
+    /* border: 2px black solid; */
+    margin: 0;
+    padding: 0px;
+    /* text-align: center; */
+}
+#boss {
+    .homepage {
+        background: url("/public/bg/tesla-1.jpg") center center no-repeat fixed,
+            url("/public/images/car2.jpg") center center repeat fixed;
+        background-size: contain;
+        min-height: calc(100dvh - 4rem);
+    }
+    /* url("/public/images/car3.jpg") bottom center no-repeat; */
+    /* min-height: 100dvh; */
+    /* background-color: rgba(2, 189, 2, 0.1); */
+
+    /* display: block; */
+    min-height: 100vh;
+    min-height: 100dvh;
+    /* background-position: center; */
+    /* background-attachment: fixed; */
+    margin: 0px;
+}
+#boss > div:nth-child(2) {
+    margin: auto auto;
+
+}
+.bg-black-100,
+.bg-black-200,
+.bg-black-300,
+.bg-black-400,
+.bg-black-500,
+.bg-black-600,
+.bg-black-700,
+.bg-black-800,
+.bg-black-900{
+    background-color: black;
+}
+.bg-white-100,
+.bg-white-200,
+.bg-white-300,
+.bg-white-400,
+.bg-white-500,
+.bg-white-600,
+.bg-white-700,
+.bg-white-800,
+.bg-white-900{
+    background-color: white;
+}
+/* @tailwind base; */
+/* @tailwind components; */
+button {
+    padding: 0.5rem;
+    /* font-size: medium; */
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border: none;
+    border-radius: 0.3rem;
+    font-weight: 600;
+    height: fit-content;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+input:invalid,
+select:invalid {
+    background-color: rgba(255, 0, 0, 0.207);
+    border: 2px solid red;
+    border-radius: 3px;
+}
+a {
+    text-decoration: none;
+    /* font-size: large; */
+    background-color: rgba(0, 0, 255, 0.149);
+}
+a:hover {
+    filter: hue-rotate(20deg);
+    box-shadow: 0px 0px 10px rgb(65, 65, 65);
+    /* color: white; */
+}
+.place-y-center {
+    top: 50%;
+    transform: translateY(-50%);
+}
+table {
+    border-collapse: collapse;
+}
+*[role="button"]{
+    cursor: pointer;
+}
+*[role="button"]:hover{
+    background-color: yellow;
+}
+.separatebycoma > span {
+    flex-shrink: 0;
+}
+.separatebycoma > span::after {
+    content: ", ";
+}
+.separatebycoma > span:last-child::after {
+    content: none;
+}
+legend,
+legend * {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    gap: 2px;
+}
+.animate-ping-1 {
+    animation: myping-1 1s ease infinite;
+}
+.warning.red {
+    padding: 2px 20px;
+    border-radius: 100px;
+    vertical-align: middle;
+    background-color: rgb(255, 213, 213);
+    color: rgb(120, 0, 0);
+    border: solid 2px rgb(120, 0, 0);
+}
+@keyframes myping-1 {
+    20%,
+    80% {
+        /* scale: 1; */
+        box-shadow: 0px 0px 0px black;
+        /* filter: brightness(1); */
+    }
+    50% {
+        box-shadow: 0px 0px 0px 5px rgb(165, 165, 165);
+        /* filter: brightness(0.8); */
+        /* scale: 0.8; */
+    }
+}
+@media print {
+    body {
+        /* zoom: 0.7; */
+        /* transform-origin: 0 0; */
+    }
+    #root .printgrid {
+        display: grid;
+    }
+    #root .printgrid.colsminauto {
+        grid-template-columns: min-content auto;
+    }
+    #root a,
+    #root button {
+        display: none !important;
+    }
+    #boss {
+        min-height: auto;
+        background: white;
+    }
+}

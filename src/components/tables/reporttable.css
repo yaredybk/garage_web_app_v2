@@ -1,0 +1,78 @@
+#root #report_page table.basic-table.report_table {
+    border: solid gray 1px;
+    border-left: solid 2px black;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    page-break-before: auto;
+    td.col-1 {
+        /* display: none; */
+        width: 1rem;
+        max-width: 1rem;
+        overflow: hidden;
+        color: transparent;
+    }
+    tr.name-admin {
+        td.col-1 {
+            border-right: rgb(12, 12, 255) 4px solid;
+        }
+        td.col-1::before {
+            content: "*";
+            color: black;
+        }
+    }
+    td.col-3,
+    td.col-4,
+    td.col-5,
+    td.col-6 {
+        text-align: right;
+        width: 5rem;
+    }
+    td.col-4.reason-tojob,
+    td.col-4.reason-sharedservice,
+    td.col-4.reason-sharedtojob,
+    td.col-4.reason-expense {
+        border-right: solid 6px rgb(255, 124, 124);
+    }
+    td.col-4.reason-fromjob,
+    td.col-4.reason-sharedfromjob,
+    td.col-4.reason-income,
+    td.col-4.reason-service {
+        border-right: solid 6px rgb(130, 255, 124);
+    }
+    tr.reason-tojob,
+    tr.reason-sharedservice,
+    tr.reason-sharedtojob,
+    tr.reason-expense {
+        /* background-color: rgb(255, 124, 124, 0); */
+        color: rgb(77, 0, 0);
+        &:hover {
+            background-color: rgb(255, 124, 124, 0.8);
+        }
+    }
+    td,
+    th {
+        border-left: 1px gray solid;
+    }
+}
+#root #report_page.retracted {
+    th:nth-child(1),
+    td:nth-child(1),
+    /* th:nth-child(2),
+    td:nth-child(2), */
+    th:nth-child(7),
+    td:nth-child(7),
+    th:last-child,
+    td:last-child {
+        display: none;
+    }
+}
+#root #report_page.retracted .report_table_con.employee,
+#root #report_page.retracted .report_table_con.general {
+    th:nth-child(2),
+    td:nth-child(2) {
+        display: table-cell;
+    }
+}
+.report_table_con {
+    grid-template-columns: auto 1fr;
+}
