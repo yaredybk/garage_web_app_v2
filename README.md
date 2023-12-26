@@ -1,8 +1,6 @@
-# React + Vite
+# Garage web app:
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Developer: Yared B.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+this is a web app that is used to manage a car service center.
+it works with its companion garage server built by me.
