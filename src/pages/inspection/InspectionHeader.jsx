@@ -3,7 +3,7 @@ import "./Inspection.css";
 import IconSmall from "./../../components/IconSmall";
 export default function InspectionHeader({ carInfo }) {
     return (
-        <div className="inspection_header pb-1 ">
+        <header className="inspection_header pb-1 ">
             <div className="garage_info">
                 <div className="grid place-items-center">
                     <img
@@ -37,9 +37,9 @@ export default function InspectionHeader({ carInfo }) {
                 </div>
             </div>
             <div className="vehicle_info">
-                <RenderPlate3 plateobj={carInfo} />
+                <RenderPlate3 inspection plateobj={carInfo} />
                 <div className="grid grid-rows-3">
-                    {["Year", "Odo", "Seats"]
+                    {carInfo && ["Year", "Odo", "Seats"]
                         .filter((val) => Object.hasOwn(carInfo, val))
                         .map((val) => (
                             <div
@@ -52,6 +52,6 @@ export default function InspectionHeader({ carInfo }) {
                         ))}
                 </div>
             </div>
-        </div>
+        </header>
     );
 }

@@ -19,38 +19,19 @@ import NewClient from "../../features/clients/NewClient";
 import RenderClients from "../../features/clients/RenderClients";
 import IconSmall from "../../components/IconSmall";
 import RenderClient from "../../features/clients/RenderClient";
+import RenderCarWithInspection from "../../features/cars/RenderCarWithInspection";
+import ButtonGreen from "../../components/button/ButtonGreen";
 
-export default function ManageCar() {
+export default function ManageCar({ inspection = undefined }) {
     const [carMake, setCarMake] = useState(null);
     const [infoo, setInfoo] = useState(null);
     const [carModel, setCarModel] = useState(null);
     const { list_region } = useContext(GlobalState);
     const { setLoad } = useContext(LoadingState);
     const { id } = useParams();
-    const carInfo = useEffectStateSingleData(`/api/getsingle/car?idcar=${id}`);
-    function getCarInfo(caridin, jobidin = null) {
-        if (!(caridin || jobidin)) {
-            return;
-        }
-        // let str = caridin
-        //     ? `${axioslinks.devDbLink}/find/CAR/id/${caridin} `
-        //     : `${axioslinks.devDbLink}/find/CAR/jobid/${jobidin}`;
-        xaxios
-            .GetData(str)
-            .then((data) => {
-                if (data.length === 1) {
-                    setobjcopy({
-                        ...data[0],
-                    });
-                } else {
-                    setobjcopy(null);
-                }
-            })
-            .catch((err) => {
-                console.warn(err);
-                setobjcopy(null);
-            });
-    }
+    const carInfo = useEffectStateSingleData(
+        `/api/getsingle/${inspection ? "inspection/car" : "car"}?idcar=${id}`
+    );
 
     function editPlate() {
         // console.log(carInfo.data[0]);
@@ -82,7 +63,7 @@ export default function ManageCar() {
         // });
         openCloseModal("edit plate no");
     }
-    function editMakeModel() {
+    function openeditMakeModel() {
         // console.log(carInfo.data[0]);
         let plateObject = carInfo.data[0];
         const element = document.getElementById("Make");
@@ -128,7 +109,11 @@ export default function ManageCar() {
             delete datain.pre;
         }
         xaxios
-            .post("/api/update/car", datain, setLoad)
+            .post(
+                `/api/update${inspection ? "/inspection/car" : "/car"}`,
+                datain,
+                setLoad
+            )
             .then(() => {
                 openCloseModal("all", "close");
                 document.getElementById("new_account_form")?.reset();
@@ -138,32 +123,17 @@ export default function ManageCar() {
     }
     return (
         carInfo.data && (
-            <div className="managecar">
-                <RenderCar key={JSON.stringify(carInfo.data)} idcar={id} />
-                <FoldedSection open title="Owner Info">
-                    {carInfo.data[0].idclient ? (
-                        <div className=" w-fit gap-2 grid-cols-2 max-sm:grid-cols-1 grid m-2">
-                            <RenderClient2 clientobj={carInfo.data[0]} />
-                            <ButtonSubmitRed onClick={detachClient}>
-                                Detach client
-                            </ButtonSubmitRed>
-                        </div>
-                    ) : (
-                        <span className=" p-2 bg-red-200 text-red-900">
-                            This vehicle does not have a registerd Owner
-                            <ButtonSubmitRed
-                                onClick={() => {
-                                    openCloseModal("addclient2", "open");
-                                }}
-                            >
-                                + Add client
-                            </ButtonSubmitRed>
-                        </span>
-                    )}
-                </FoldedSection>
-                <br />
+            <main className="managecar grid grid-cols-2 max-md:grid-cols-1 gap-2 items-center">
+                {inspection ? (
+                    <RenderCarWithInspection
+                        key={JSON.stringify(carInfo.data)}
+                        idcar={id}
+                    />
+                ) : (
+                    <RenderCar key={JSON.stringify(carInfo.data)} idcar={id} />
+                )}
                 <div className="flex flex-wrap gap-2 ">
-                    <ButtonSubmit onClick={editMakeModel}>
+                    <ButtonSubmit onClick={openeditMakeModel}>
                         Edit Make / Model
                     </ButtonSubmit>
                     <ButtonSubmit onClick={editPlate}>
@@ -172,9 +142,40 @@ export default function ManageCar() {
 
                     {/* <ButtonSubmit onClick={changeowner}>change owner</ButtonSubmit> */}
                 </div>
+                <FoldedSection open title="Owner Info">
+                    <div className=" w-fit gap-2  flex flex-wrap m-2">
+                        <RenderClient2 clientobj={carInfo.data[0]} />
+                        {carInfo.data[0].idclient ? (
+                            <>
+                                <ButtonSubmitRed onClick={detachClient}>
+                                    - detach client
+                                </ButtonSubmitRed>
+                                <ButtonSubmitRed
+                                    onClick={() => {
+                                        openCloseModal("addclient2", "open");
+                                    }}
+                                >
+                                    - change client
+                                </ButtonSubmitRed>
+                            </>
+                        ) : (
+                            <span className=" p-2 bg-red-200 text-red-900">
+                                This vehicle does not have a registerd Owner
+                                <ButtonGreen
+                                    onClick={() => {
+                                        openCloseModal("addclient2", "open");
+                                    }}
+                                >
+                                    + Add client
+                                </ButtonGreen>
+                            </span>
+                        )}
+                    </div>
+                </FoldedSection>
+                
                 <BasicDialog id="edit plate no">
                     <BasicForm
-                        formClass=" grid gap-2 place-items-center"
+                        formClass=" flex flex-wrap gap-2 items-center"
                         title="edit plate"
                         onSubmit={sendplate}
                     >
@@ -347,13 +348,13 @@ export default function ManageCar() {
                         </button>
                     </div>
                 </BasicDialog>
-            </div>
+            </main>
         )
     );
     function attachClient() {
         xaxios
             .post(
-                "/api/update/car",
+                `/api/update/car?${inspection ? "inspection" : ""}`,
                 {
                     where: { idcar: id },
                     idclient: infoo.idclient,
@@ -373,7 +374,7 @@ export default function ManageCar() {
         if (ans)
             xaxios
                 .post(
-                    "/api/update/car",
+                    `/api/update/car${inspection ? "inspection" : ""}`,
                     {
                         where: { idcar: id },
                         idclient: null,

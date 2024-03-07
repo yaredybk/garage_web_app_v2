@@ -25,8 +25,9 @@ export default function RenderPlateInspection({
         gender: "",
         phoneno: "+251-",
     },
-    datein="2"
+    datein = "2",
 }) {
+    const className = "pt-1   max-h-[80%] max-w-[90%]    object-contain absolute-center mt-2";
     plateobj = plateobj || {
         idcar: 0,
         idclient: 0,
@@ -72,7 +73,8 @@ export default function RenderPlateInspection({
         );
     }
     function openCar() {
-        if (plateobj.idinspection) navigate(`/nav/edit-inspection/${plateobj.idinspection}`);
+        if (plateobj.idinspection)
+            navigate(`/nav/inspections/payment/${plateobj.idinspection}`);
     }
     // defualt return
     return (
@@ -88,15 +90,23 @@ export default function RenderPlateInspection({
             </div>
             <div className="caridmodel  w-48   leading-5 pl-1 pb-1    h-28 overflow-hidden    relative">
                 <img
+                 onError={(e)=>{
+                    if(e.currentTarget.src.includes("carlogos")){
+                    e.currentTarget.className=" hidden  ";
+                    return;}
+                    e.currentTarget.className=className;
+                    e.currentTarget.src = `${baseurl2}/files/image/carlogos/${plateobj?.make?.trimEnd()}-logo.png`;
+                    
+                }}
                     className="h-[120%] pt-1  w-48   absolute  object-cover  "
                     src={`${baseurl2}/files/image/cars/${plateobj.make}/${plateobj.model}.webp`}
                     alt=""
                 />
-                <span className=" relative p-[1px] float-right text-red-600   bg-opacity-70 mb-auto      font-bold">
-                    {datein}
-                </span>
-                <span className=" relative  bg-opacity-70      font-bold">
+                <div className=" -mx-1 relative overflow-hidden min-w-fit w-max  bg-opacity-70      font-bold">
                     {plateobj.make} {plateobj.model}
+                </div>
+                <span className=" absolute right-0 top-0 bg-slate-300 p-[1px] float-right text-red-600   bg-opacity-80 mb-auto      font-bold">
+                    {datein}
                 </span>
                 <span className="flex-1"></span>
             </div>

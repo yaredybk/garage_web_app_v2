@@ -28,11 +28,11 @@ export default function RenderCarWithInspection({
     let filteredData = null;
     const { setLoad, load } = useContext(LoadingState);
     const { pathname } = useLocation();
-    const patheslist = ["/nav/appt", "/nav/check-in", "/nav/job"];
+    const patheslist = ["/nav/appt", "/nav/check-in", "/nav/jobs/edit"];
     const navigate = useNavigate();
     const [refreshdata, setRefreshdata] = useState(1);
     const { data } = useEffectStateSingleData(
-        "/api/getsingle/car?idcar=" + idcar,
+        "/api/getsingle/inspection/car?idcar=" + idcar,
         setRefreshdata
     );
     useEffect(() => {
@@ -59,13 +59,13 @@ export default function RenderCarWithInspection({
                     title={
                         <span className="flex items-center gap-1">
                             <IconSmall src="/public/images/caricon.svg"></IconSmall>
-                            Car Info
+                            Inspection Car Info
                         </span>
                     }
                 >
                     <div className="grid  gap-2">
                         <span className="flex">
-                            <RenderPlate3 plateobj={filteredData} />
+                            <RenderPlate3 inspection plateobj={filteredData} />
                         </span>
                         {filteredData.phoneno ? (
                             <a
@@ -139,7 +139,7 @@ export default function RenderCarWithInspection({
             .post(`/api/addnew/inspection`, { idcar,carinfo:data }, setLoad)
             .then((res) => {
                 if(res.insertId)
-                navigate(`/nav/edit-inspection/${res.insertId}`,{state:{carinfo:data}});
+                navigate(`/nav/inspections/edit/${res.insertId}`,{state:{carinfo:data}});
             });
     }
 }

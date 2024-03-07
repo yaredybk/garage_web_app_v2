@@ -7,16 +7,17 @@ export default function BasicForm({
     title = "form",
     className = "",
     onSubmit = null,
-    onChange = null,
+    onChange = (event)=>null,
     removeEmpty = false,
     formClass = "",
+    ...props
 }) {
     const { load, setLoad } = useContext(LoadingState);
     const className1 =
         "border-2 border-inherit  px-1  rounded-t-md  " + className;
     return (
         <fieldset className={className1}>
-            <legend className=" px-2 font-bold">{title}</legend>
+            {title != "form" &&<legend className=" px-2 font-bold">{title}</legend>}
             <form
                 id={title}
                 className={formClass ? formClass : " flex flex-wrap gap-2"}
@@ -38,11 +39,12 @@ export default function BasicForm({
                             }
                         });
                     }
-                    if (onSubmit) onSubmit(data);
+                    if (onSubmit) onSubmit(data,e);
                     else {
                         console.log(data);
                     }
                 }}
+                {...props}
             >
                 {children}
             </form>

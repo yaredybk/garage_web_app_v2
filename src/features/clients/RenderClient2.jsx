@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import IconSmall from "../../components/IconSmall";
 
 export default function RenderClient2({
     clientobj = { name: "unknown", phoneno: "+251-" },
@@ -9,15 +10,17 @@ export default function RenderClient2({
     return (
         <span className="grid w-fit gap-1">
             <Link
-                className=" py-2 px-1"
-                to={`/nav/client/${clientobj?.idclient}`}
+                className=" py-2 px-1 flex items-center"
+                to={`/nav/clients/${clientobj?.idclient}`}
             >
-                ({clientobj?.idclient}) {clientobj?.name}
+                <IconSmall className=" mr-1" src="/public/images/person2.png"></IconSmall>(
+                {clientobj?.idclient}) {clientobj?.name}
             </Link>
             <a
                 href={"tel:" + clientobj?.phoneno}
-                className=" bg-white px-1 rounded-sm outline-1 outline outline-blue-600 "
+                className=" flex items-center gap-1 bg-white p-2 rounded-sm outline-1 outline outline-blue-600 "
             >
+                <IconSmall src="/public/images/call.svg" alt="call" />
                 {clientobj?.phoneno}
             </a>
         </span>

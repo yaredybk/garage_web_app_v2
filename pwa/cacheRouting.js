@@ -28,7 +28,7 @@ export const presetsRoute = new Route(
 // singleRouter.route("/appt").get(getappt);
 // singleRouter.route("/car").get(getcar);
 // singleRouter.route("/checkin/:id").get(getcheckin);
-// singleRouter.route("/job/:id").get(getcheckin);
+// singleRouter.route("/jobs/edit/:id").get(getcheckin);
 
 //  cars
 export const carsCache = new Route(

@@ -1,12 +1,12 @@
-export function objectToQuery(objin) {
+export function objectToQuery(objin, separator = "&",quote="") {
     if (!objin) {
         console.log("ObjectToQuery: invalid object");
         return "";
     }
     let qqsrt = "";
     Object.keys(objin).map((key, ind) => {
-        qqsrt = qqsrt.concat("&", key, "=", objin[key]);
+        if (objin[key]) qqsrt = qqsrt.concat(`${separator}${key}=${quote}${objin[key]}${quote}`);
     });
-    qqsrt = qqsrt.replace(/^&/, "");
+    if (qqsrt.length) qqsrt = qqsrt.slice(1);
     return qqsrt;
 }

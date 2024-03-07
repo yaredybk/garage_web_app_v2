@@ -1,13 +1,13 @@
 import React from "react";
 
-export default function MainContainer({ children, ...props }) {
+export default function MainContainer({ children,className="", ...props }) {
     return (
-        <div
+        <main
             className={
-                " bg-white  printgrid   gap-1  p-2 grid    max-w-[24cm]  mx-auto "
+                " bg-white  printgrid   gap-1  p-2 grid    max-w-[24cm]  mx-auto " + className
             }
         >
             {children}
-        </div>
+        </main>
     );
 }

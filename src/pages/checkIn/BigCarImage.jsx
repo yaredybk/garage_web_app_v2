@@ -193,7 +193,7 @@ export default function BigCarImage({
                 </>
             )}
             {!tableOnly && (
-                <div id="overflowcon" className="grid overflow-auto p-2">
+                <div id="overflowcon" className="grid overflow-auto p-0">
                     <div
                         id="carimagecon"
                         className="border-4  border-cyan-300 border-solid m-0 p-0 bg-blue-500 h-fit flex w-fit relative "
@@ -220,15 +220,16 @@ export default function BigCarImage({
                     </div>
                 </div>
             )}
-
-            <BasicTable
-                data={list1}
-                // onRowClickIndex={handleTableRowClick}
-                rowObjectUP={(rowObj)=>{
-                    handleTableRowClick(rowObj.id)
-                }}
-                // colIndex={0}
-            />
+            {tableOnly && (
+                <BasicTable
+                    data={list1}
+                    // onRowClickIndex={handleTableRowClick}
+                    rowObjectUP={(rowObj) => {
+                        handleTableRowClick(rowObj.id);
+                    }}
+                    // colIndex={0}
+                />
+            )}
         </div>
     );
 }

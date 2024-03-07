@@ -35,11 +35,11 @@ async function advanced_search_1({
     where = {},
 }) {
     // console.log(searchfor, searchValue, using);
-    if (!(searchfor && searchValue && using))
-        return new Promise(function (resolve, reject) {
-            /* stuff using username, password */
-            reject("invalid data");
-        });
+    // if (!(searchfor && searchValue && using))
+    //     return new Promise(function (resolve, reject) {
+    //         /* stuff using username, password */
+    //         reject("invalid data");
+    //     });
     return xaxios
         .post(
             `/api/search/advanced/level_1?searchfor=${searchForOptions[searchfor]}&using=${usingOptions[searchfor][using]}&searchValue=${searchValue}`,

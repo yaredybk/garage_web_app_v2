@@ -1,0 +1,11 @@
+.icon1 {
+    object-fit: cover;
+    aspect-ratio: 1.8;
+    margin-bottom: -1rem;
+    /* margin-top: -0.5rem; */
+    &.carlogo {
+        /* margin: 0px; */
+        scale: 0.6;
+        /* margin: -1.5rem 0rem; */
+    }
+}

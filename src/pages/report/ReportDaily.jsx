@@ -10,10 +10,11 @@ import xaxios from "../../utils/xaxios";
 import ButtonSubmit from "../../components/button/ButtonSubmit";
 import { _utilFunction } from "../../utils/_utilFunctions";
 import IconSmall from "../../components/IconSmall";
+import ClockBig from "../../components/ClockBig";
 const sendtobutton = localStorage.getItem("username") !== "daniel";
-export default function ReportDaily() {
+export default function ReportDaily({ forprint = false }) {
     let curloc = new URL(document.location.href);
-    let today = _utilFunction.today();
+    let today = _utilFunction.dateToday();
     let rr = curloc.searchParams.get("range") || "number";
     let vv = curloc.searchParams.get("value") || (rr == "number" ? 0 : today);
     const [info, setInfo] = useState({
@@ -96,7 +97,7 @@ export default function ReportDaily() {
     function handleRowClick(rowArra) {
         if (Array.isArray(rowArra))
             if (rowArra[rowArra.length - 1])
-                navigate("/nav/job/" + rowArra[rowArra.length - 1]);
+                navigate("/nav/jobs/edit/" + rowArra[rowArra.length - 1]);
     }
     const { load, setLoad } = useContext(LoadingState);
     function onChangeFilter(e) {
@@ -146,12 +147,13 @@ export default function ReportDaily() {
         <div
             id="report_page"
             className={
-                "  grid  gap-2  py-2     max-w-[30cm] print:w-full  mx-auto " +
+                "  grid  gap-2  py-2 h-fit     max-w-[30cm] print:w-full  mx-auto " +
                 expanded
             }
             // <div className=" bg-white  gap-2   p-1 grid static printgrid colsminauto grid-cols-[min-content,1fr] max-md:grid-cols-1   print:max-w-[95wv] print:grid-cols-[min-content,auto]    ">
         >
             <div className=" print:justify-center flex gap-2 items-center justify-center  col-span-full flex-wrap   w-fit mx-auto text-center ">
+                <ClockBig />
                 <h2>REPORT : </h2>
                 <select
                     className=" text-xl h-9"
@@ -259,8 +261,9 @@ export default function ReportDaily() {
                     accountInfo={{ name: "agent" }}
                 />
             )} */}
-            <div className="  gap-2 items-center grid grid-cols-2 print:hidden col-span-full mx-auto w-fit bg-gray-200 p-2  ">
-                {/* {["all", "general", "internal", "employee", "agent"].map(
+            {!forprint && (
+                <div className="  gap-2 items-center grid grid-cols-2 print:hidden col-span-full mx-auto w-fit bg-gray-200 p-2  ">
+                    {/* {["all", "general", "internal", "employee", "agent"].map(
                     (catt) => {
                         let ff = filter[catt];
                         return (
@@ -278,43 +281,44 @@ export default function ReportDaily() {
                         );
                     }
                 )} */}
-                <label
-                    className="bg-white m-1 py-1 px-2   w-fit rounded-md print:hidden"
-                    htmlFor="expanded"
-                >
-                    <input
-                        checked={expanded == "expanded"}
-                        onChange={(e) => {
-                            localStorage.setItem(
-                                "ReportExpanded",
-                                e.target.checked ? "expanded" : "retracted"
-                            );
-                            setExpanded(
-                                e.target.checked ? "expanded" : "retracted"
-                            );
-                        }}
-                        type="checkbox"
-                        name="expanded"
-                        id="expanded"
-                    />
-                    show more
-                </label>
-                <ButtonSubmit onClick={makeAreport}>
-                    {info.range == "number" && info.number == "0"
-                        ? "Make a Report"
-                        : "goto unreported"}
-                </ButtonSubmit>
-            </div>
-            {sendtobutton && (
+                    <label
+                        className="bg-white m-1 py-1 px-2   w-fit rounded-md print:hidden"
+                        htmlFor="expanded"
+                    >
+                        <input
+                            checked={expanded == "expanded"}
+                            onChange={(e) => {
+                                localStorage.setItem(
+                                    "ReportExpanded",
+                                    e.target.checked ? "expanded" : "retracted"
+                                );
+                                setExpanded(
+                                    e.target.checked ? "expanded" : "retracted"
+                                );
+                            }}
+                            type="checkbox"
+                            name="expanded"
+                            id="expanded"
+                        />
+                        show more
+                    </label>
+                    <ButtonSubmit onClick={makeAreport}>
+                        {info.range == "number" && info.number == "0"
+                            ? "Make a Report"
+                            : "goto unreported"}
+                    </ButtonSubmit>
+                </div>
+            )}
+            {!forprint && sendtobutton && (
                 <div className="flex flex-wrap gap-4 print:hidden">
                     <PrintButton />
-                    <ButtonSubmit
+                    {/* <ButtonSubmit
                         onClick={unduLastTransaction}
                         className=" py-2 m-1  bg-red-300 outline-1 outline outline-red-800 text-red-800 font-bold"
                     >
                         <IconSmall src="/public/images/refresh.svg" />
                         UNDU LAST TRANSACTION
-                    </ButtonSubmit>
+                    </ButtonSubmit> */}
                     <ButtonSubmit
                         onClick={sendReportDataToAdmin}
                         className=" py-2 m-1  bg-red-200 outline-1 outline outline-red-600 text-red-600 font-bold"
@@ -341,6 +345,7 @@ export default function ReportDaily() {
         </div>
     );
     function unduLastTransaction() {
+        return;
         let ans = confirm("are you sure, you want to undu last transaction?");
         if (ans) {
             xaxios

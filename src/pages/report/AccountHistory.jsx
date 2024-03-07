@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import MainContainer from "../../layout/MainContainer";
 import { useEffectStateArrayData } from "./../../hooks/EffectStateArrayData";
 import BasicForm from "../../components/form/BasicForm";
@@ -13,52 +13,46 @@ import TransactionHisTable from "../../components/tables/TransactionHisTable";
 import useSearchParamsWithState from "../../hooks/useSearchParamsWithState";
 import { _utilFunction } from "../../utils/_utilFunctions";
 import AccountSelector from "../../utils/AccountSelector";
+import AccountSelector_v2 from "../../utils/AccountSelector_v2";
 
-export default function AccountHistory() {
+export function AccountHistoryMain({ info = {}, noselector = false }) {
     const [params, setSingleParam] = useSearchParamsWithState({
-        idaccount: 4,
-        date: _utilFunction.today(),
+        idaccount: info.idaccount,
+        date: _utilFunction.dateToday(),
         range: "week",
     });
-    // console.log(params);
     const { list_accounts } = useContext(GlobalState);
     const [accountgroup, setaccountgroup] = useState("internal");
-    // const [info, setInfo] = useState({
-    //     idaccount: 4,
-    //     date: date,
-    //     range: "week",
-    // });
     const { list1, refetchData } = useEffectStateArrayData(
         `/api/getlist/transaction/history?idaccount=${params.idaccount}&date=${params.date}&range=${params.range}`
     );
-    const usepp = useParams();
-    // console.log(usepp);
-    const usespp = useSearchParams();
-    // console.log(usespp);
     const navigate = useNavigate();
     function onInfoChange(e) {
         let { name, value } = e.target;
-        setSingleParam([name, value]);
-        // setInfo({ ...info, [name]: value });
+        if (value) setSingleParam([name, value]);
     }
+    useEffect(() => {
+        if (info.idaccount) {
+            setSingleParam(["idaccount",info.idaccount])
+            // setSingleParam({ ...params, idaccount:info.idaccount });
+        }
+    }, [info]);
+
     return (
-        <MainContainer>
+        <>
             <BasicForm onSubmit={refetchData}>
-                <AccountSelector
-                    required
-                    value={params.idaccount}
-                    name="idaccount"
-                    id="idaccount"
-                    // className=" bg-red-300"
-                    accountgroupin="internal"
-                    onChange={onInfoChange}
+                {!noselector && (
+                    <AccountSelector_v2
+                        required
+                        value={params.idaccount}
+                        name="idaccount"
+                        id="idaccount"
+                        idaccountin={params.idaccount}
+                        // className=" bg-red-300"
+                        accountgroupin="internal"
+                        onChange={onInfoChange}
                     />
-
-                <BreakLine2 />
-
-                    <h2>{list_accounts?.filter((ele)=>ele.idaccount==params.idaccount)?.map((ele2)=>
-                        ele2?.name 
-                        )}</h2>
+                )}
                 <input
                     value={params.date}
                     onChange={onInfoChange}
@@ -82,22 +76,28 @@ export default function AccountHistory() {
             <BreakLine2 />
 
             <OverFlowAuto>
-                
                 <TableWithSubtotal
-                subtotalColName="amount"
+                    subtotalColName="amount"
                     accountInfo={params}
                     rowObjectUP={handleRowClick}
                     data={list1}
                 />
             </OverFlowAuto>
-        </MainContainer>
+        </>
     );
     function handleRowClick(rowObj) {
         console.log(rowObj);
-        if (rowObj.j_id) navigate("/nav/job/" + rowObj.j_id);
+        if (rowObj.j_id) navigate("/nav/jobs/edit/" + rowObj.j_id);
     }
 }
 
+export default function AccountHistory({ info = {} }) {
+    return (
+        <MainContainer>
+            <AccountHistoryMain info={info} />
+        </MainContainer>
+    );
+}
 // function SelectAccountCategory({ onSetState = () => null, list = [] }) {
 //     return (
 //         <div className="account_category grid grid-cols-4 gap-2 p-1">

@@ -262,7 +262,7 @@ export default function ManageSalary({ list_accounts }) {
             });
     }
     return (
-        <div id="Manage salary" className=" px-3">
+        <main id="Manage salary" className=" px-3">
             {RenderStateges()}
             <div className="bg-orange-300 flex items-center gap-2 bold -mx-2 my-1 p-4 ">
                 <b>stage {stageNO}</b>
@@ -275,7 +275,7 @@ export default function ManageSalary({ list_accounts }) {
                     _paySalaryToEmployee={_paySalaryToEmployee}
                 />
             </BasicDialog>
-        </div>
+        </main>
     );
 
     function nextStage(dir) {

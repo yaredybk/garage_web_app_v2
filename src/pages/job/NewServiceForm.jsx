@@ -7,7 +7,6 @@ const tojobCategory_FunctionConstructor = {
         inactiveOperation: 1,
         account: null,
         idaccount: 2,
-        amount: "",
     },
     electrical: {
         category: "electrical",
@@ -17,7 +16,6 @@ const tojobCategory_FunctionConstructor = {
         inactiveOperation: 1,
         account: null,
         idaccount: 2,
-        amount: "",
     },
     body: {
         category: "body",
@@ -27,7 +25,6 @@ const tojobCategory_FunctionConstructor = {
         inactiveOperation: 1,
         account: null,
         idaccount: 2,
-        amount: "",
     },
     painting: {
         category: "painting",
@@ -37,7 +34,6 @@ const tojobCategory_FunctionConstructor = {
         inactiveOperation: 1,
         account: null,
         idaccount: 2,
-        amount: "",
     },
     inspection: {
         category: "inspection",
@@ -47,29 +43,9 @@ const tojobCategory_FunctionConstructor = {
         inactiveOperation: 1,
         account: null,
         idaccount: 2,
-        amount: "",
     },
     // ////////////////////////////////////////////////
-    replacement: {
-        category: "replacement",
-        reason: "tojob",
-        method: "tojob",
-        balanceOperation: -1,
-        inactiveOperation: 1,
-        account: null,
-        idaccount: 0,
-        amount: "",
-    },
-    other: {
-        category: "other",
-        reason: "tojob",
-        method: "tojob",
-        balanceOperation: -1,
-        inactiveOperation: 1,
-        account: null,
-        idaccount: 0,
-        amount: "",
-    },
+
     hidden: {
         category: "hidden",
         reason: "hidden",
@@ -91,6 +67,11 @@ import BasicDialog from "./../../components/dialog/BasicDialog";
 import { openCloseMiniPop, openCloseModal } from "../../utils/userInterface";
 import xaxios from "../../utils/xaxios";
 import { LoadingState } from "../../context/LoadingContext";
+import InputContainer_v2 from "../../components/input/InputContainer_v2";
+import ButtonSubmit_v2 from "./../../components/button/ButtonSubmit_v2";
+import AccountSelector_v2 from "../../utils/AccountSelector_v2";
+import IconSmall from "../../components/IconSmall";
+import IconLock from "./../../components/IconLock";
 
 export default function NewServiceForm({
     id,
@@ -101,7 +82,7 @@ export default function NewServiceForm({
 }) {
     const { list_accounts } = useContext(GlobalState);
     const { load, setLoad } = useContext(LoadingState);
-    const [manualEdit, setManualEdit] = useState(false);
+    const [manualEdit, setManualEdit] = useState(true);
 
     const [accountgroup, setaccountgroup] = useState(null);
     const [sharingOrder, setSharingOrder] = useState({
@@ -109,13 +90,16 @@ export default function NewServiceForm({
         accounts: null,
     });
     const [newTransactionData, setNewTransactionData] = useState({
-        idaccount: null,
-        amount: "",
+        idaccount: list_accounts.find(
+            (o) => o.role == "internal" && o.name == "garage"
+        )?.idaccount,
+        amount: datain?.amount || "",
         amountshared: "",
+        enablegarage: true,
         amountgarage: "",
         reason: null,
         method: null,
-        description: null,
+        description: datain?.description || null,
         category: null,
         idjob: id,
         percent: 0,
@@ -125,6 +109,7 @@ export default function NewServiceForm({
         enablevat: false,
         idtransaction: datain?.idtransaction,
     });
+
     let sampleData = [
         "idaccount",
         "amount",
@@ -136,7 +121,13 @@ export default function NewServiceForm({
     ];
     function onChangeIdAccountShared(e) {
         let val = e.target.value;
-        if (!val) return console.log("invalid id");
+        if (!val) {
+            setNewTransactionData({
+                ...newTransactionData,
+                idaccountshared: val,
+            });
+            return;
+        }
         let account = list_accounts?.find((obj) => obj?.idaccount == val);
         // console.log(account);
         let newdata = percentCalculator("percent", account?.percent, true);
@@ -147,70 +138,13 @@ export default function NewServiceForm({
             percent: account?.percent,
         });
     }
-    function SelectAccountCategory() {
-        return (
-            <div className="account_category flex items-stretch  gap-2  p-1">
-                <input
-                    defaultChecked
-                    onChange={(e) => {
-                        let val = e.target.checked;
-                        // console.log(val);
-                        setNewTransactionData({
-                            ...newTransactionData,
-                            enablesharing: val,
-                        });
-                    }}
-                    type="checkbox"
-                    name="enablesharing"
-                    id="enablesharing"
-                />
-                {["agent", "employee"].map((type, ind) => (
-                    <button
-                        key={type}
-                        onClick={() => {
-                            setaccountgroup(type);
-                            setNewTransactionData({
-                                ...newTransactionData,
-                                percent: 0,
-                                amountshared: 0,
-                                amountgarage: newTransactionData.amount,
-                                idaccountshared: "",
-                                accountInfoShared: null,
-                            });
-                        }}
-                        type="button"
-                        className={
-                            accountgroup == type
-                                ? "bg-green-300 flex-1 p-1 pb-2 border-solid border-2  "
-                                : "bg-gray-300 flex-1 p-1 pb-2  border-solid border-2 border-gray-400 "
-                        }
-                    >
-                        {type}
-                    </button>
-                ))}
-                <button
-                    onClick={() => {
-                        setManualEdit(!manualEdit);
-                    }}
-                    className={
-                        manualEdit
-                            ? " border-2 h-full py-0 px-1 border-solid border-gray-600 bg-red-400 animate-ping-1"
-                            : " border-2 h-full py-0 px-1 border-solid border-gray-300 "
-                    }
-                    type="button"
-                >
-                    <img
-                        className="   h-7"
-                        src="/public/images/edit.svg"
-                        alt="edit"
-                    />
-                </button>
-            </div>
-        );
-    }
     function addNewTransactionToJob(key) {
         setaccountgroup(null);
-        let newObj = tojobCategory_FunctionConstructor[key];
+        let newObj = {
+            category: "painting",
+            reason: "service",
+            method: "tojob",
+        };
         newObj.idjob = id;
         setaccountgroup("employee");
         setNewTransactionData({ ...newTransactionData, ...newObj });
@@ -230,13 +164,13 @@ export default function NewServiceForm({
             } else if (valuetype == "amountshared") {
                 amountgarage = amount;
                 amountshared = "";
-                percent = 0;
+                // percent = 0;
             } else if (valuetype == "amountgarage") {
                 amountgarage = "";
                 // percent = 0;
             } else if (valuetype == "percent") {
                 percent = "";
-                amountgarage = 0;
+                // amountgarage = 0;
             }
         } else
             switch (valuetype) {
@@ -245,6 +179,7 @@ export default function NewServiceForm({
                     amountgarage = Math.round(
                         amount * (1 - newTransactionData.percent / 100)
                     );
+
                     amountshared = Math.round(
                         amount * (newTransactionData.percent / 100)
                     );
@@ -255,14 +190,14 @@ export default function NewServiceForm({
                     //     amountshared / (newTransactionData.percent / 100)
                     // );
                     amountgarage = amount - amountshared;
-                    percent = Math.round((amountshared / amount) * 100);
+                    // percent = Math.round((amountshared / amount) * 100);
                     //  Math.round( amount * (1 - newTransactionData.percent / 100));
                     // amountshared =Math.round( amount *( newTransactionData.percent/100));
                     break;
                 case "amountgarage":
                     amountgarage = value;
                     amountshared = amount - amountgarage;
-                    percent = Math.round((amountshared / amount) * 100);
+                    // percent = Math.round((amountshared / amount) * 100);
                     // amount = Math.round(
                     //     amountgarage / (1 - newTransactionData.percent / 100)
                     // );
@@ -289,10 +224,10 @@ export default function NewServiceForm({
         let obj = {
             ...newTransactionData,
             amount,
-            amountgarage,
-            amountshared,
             percent: manualEdit ? newTransactionData.percent : percent,
         };
+        if (newTransactionData.enablegarage) obj.amountgarage = amountgarage;
+        if (newTransactionData.enablesharing) obj.amountshared = amountshared;
         if (nostatechange) {
             return obj;
         }
@@ -305,7 +240,7 @@ export default function NewServiceForm({
         setLoad(true);
         // console.log(newTransactionData);
         // return;
-        let url1 = "/api/transaction/addtojob?category=service";
+        let url1 = "/api/transaction/addtojob/service";
         xaxios
             .post(url1, { ...newTransactionData, sharingOrder })
             .then((res) => {
@@ -335,10 +270,13 @@ export default function NewServiceForm({
                         )
                 )}
             </div>
-            <BasicDialog id="new service form">
+            <BasicDialog
+                withcalc
+                title={newTransactionData.category}
+                id="new service form"
+            >
                 <BasicForm
-                    title={newTransactionData.category}
-                    formClass=" flex flex-col items-center gap-2 "
+                    formClass=" flex flex-col  gap-2 "
                     key={newTransactionData.category}
                     removeEmpty={false}
                     onSubmit={sendTransactionData}
@@ -363,225 +301,11 @@ export default function NewServiceForm({
                             className=" w-8"
                         />
                     </span>
-                    <InputContainer htmlFor="NET Amount">
-                        <div className=" flex items-stretch justify-evenly gap-2">
-                            <input
-                                min={1}
-                                autoFocus
-                                className=" bg-yellow-200 border-yellow-400 border rounded-sm text-yellow-800 w-24"
-                                autoComplete="off"
-                                required={
-                                    newTransactionData?.category != "note"
-                                }
-                                type="number"
-                                name="amount"
-                                id="amount"
-                                value={newTransactionData.amount}
-                                onChange={(e) => {
-                                    percentCalculator(
-                                        e.target.name,
-                                        e.target.value
-                                    );
-                                }}
-                            />
-                            <span className="bg-red-100 flex  outline-red-300 outline outline-2 rounded-md text-red-500 items-stretch">
-                                <label htmlFor="enablevat" className="px-3">
-                                    vat
-                                </label>
-                                <input
-                                    onChange={(e) => {
-                                        let tmp = e.target.checked;
-                                        setNewTransactionData({
-                                            ...newTransactionData,
-                                            enablevat: tmp,
-                                        });
-                                    }}
-                                    type="checkbox"
-                                    name="enablevat"
-                                    id="enablevat"
-                                />
-                                {newTransactionData.enablevat && (
-                                    <input
-                                        className=" w-16"
-                                        type="number"
-                                        readOnly
-                                        value={
-                                            Math.round(
-                                                newTransactionData.amount * 15
-                                            ) / 100
-                                        }
-                                        name="vat"
-                                        id="vat"
-                                    />
-                                )}
-                            </span>
-                        </div>
-                    </InputContainer>
-                    <InputContainer
-                        className="bg-blue-100 min-w-[18rem]  -m-[2px] pb-1 rounded-sm"
-                        title="share with employee / agent"
-                        htmlFor="enablesharing"
-                    >
-                        {newTransactionData?.enablesharing ? (
-                            <div className="grid gap-1">
-                                <SelectAccountCategory />
-                                <div className="py-1  mx-auto  max-w-fit grid grid-cols-[1fr,auto,auto] gap-2 ">
-                                    <select
-                                        className=" w-32"
-                                        name="idaccountshared"
-                                        id="idaccountshared"
-                                        required
-                                        value={
-                                            newTransactionData.idaccountshared
-                                                ? newTransactionData.idaccountshared
-                                                : 0
-                                        }
-                                        onChange={onChangeIdAccountShared}
-                                    >
-                                        <option value="">
-                                            {accountgroup}-
-                                        </option>
-                                        <optgroup
-                                            label={newTransactionData.category}
-                                        >
-                                            {list_accounts?.map(
-                                                (obj, ind) =>
-                                                    obj?.role == accountgroup &&
-                                                    obj?.proffession ==
-                                                        newTransactionData.category && (
-                                                        <option
-                                                            key={ind}
-                                                            value={
-                                                                obj.idaccount
-                                                            }
-                                                        >
-                                                            {obj?.name}
-                                                        </option>
-                                                    )
-                                            )}
-                                        </optgroup>
-                                        <optgroup label="others">
-                                            {list_accounts?.map(
-                                                (obj, ind) =>
-                                                    obj?.role ==
-                                                        accountgroup && (
-                                                        <option
-                                                            key={ind}
-                                                            value={
-                                                                obj.idaccount
-                                                            }
-                                                        >
-                                                            {obj?.name}
-                                                        </option>
-                                                    )
-                                            )}
-                                        </optgroup>
-                                    </select>
-                                    <select
-                                        name="percent"
-                                        id="percent"
-                                        className=" w-20"
-                                        required
-                                        disabled={manualEdit}
-                                        value={
-                                            newTransactionData.percent
-                                                ? newTransactionData.percent
-                                                : 0
-                                        }
-                                        onChange={(e) => {
-                                            percentCalculator(
-                                                "percent",
-                                                e.target.value
-                                            );
-                                        }}
-                                    >
-                                        <optgroup label="common">
-                                            <option value="0">0 %</option>
-                                            <option value="5">5 %</option>
-                                            <option value="10">10 %</option>
-                                            <option value="15">15 %</option>
-                                            <option value="20">20 %</option>
-                                            <option value="25">25 %</option>
-                                            <option value="30">30 %</option>
-                                            <option value="50">50 %</option>
-                                            <option value="100">100 %</option>
-                                        </optgroup>
-                                        <optgroup label="more">
-                                            {[...Array(101).keys()]?.map(
-                                                (vall, ind) => (
-                                                    <option
-                                                        key={ind}
-                                                        value={vall}
-                                                    >
-                                                        {vall} %
-                                                    </option>
-                                                )
-                                            )}
-                                        </optgroup>
-                                    </select>
-                                    <input
-                                        autoComplete="off"
-                                        value={newTransactionData?.amountshared}
-                                        className=" w-20 "
-                                        type="number"
-                                        name="amountshared"
-                                        id="amountshared"
-                                        min={0}
-                                        onChange={sendToPercentCalculator}
-                                    />
-                                    <select
-                                        name="idgarage"
-                                        id="idgarage"
-                                        readOnly
-                                        disabled
-                                        defaultValue="2"
-                                        className=" p-2"
-                                    >
-                                        <option value="2">garage</option>
-                                    </select>
-                                    <input
-                                        disabled
-                                        autoComplete="off"
-                                        value={`${
-                                            100 - newTransactionData?.percent
-                                        } %`}
-                                        className=" w-16"
-                                        type="text"
-                                        name="percentgarage"
-                                        id="percentgarage"
-                                    />
-                                    <input
-                                        autoComplete="off"
-                                        required
-                                        value={newTransactionData?.amountgarage}
-                                        className=" w-20"
-                                        type="number"
-                                        name="amountgarage"
-                                        id="amountgarage"
-                                        min={0}
-                                        onChange={sendToPercentCalculator}
-                                    />
-                                </div>
-                            </div>
-                        ) : (
-                            <input
-                                onChange={(e) => {
-                                    let val = e.target.checked;
-                                    // console.log(val);
-                                    setNewTransactionData({
-                                        ...newTransactionData,
-                                        enablesharing: val,
-                                    });
-                                }}
-                                type="checkbox"
-                                name="enablesharing"
-                                id="enablesharing"
-                            />
-                        )}
-                    </InputContainer>
-                    <InputContainer htmlFor="description">
+                    <InputContainer_v2 htmlFor="description">
                         <input
+                            className=" w-[20rem] max-sm:w-auto"
                             required
+                            autoFocus
                             defaultValue={newTransactionData.description}
                             onChange={(e) => {
                                 setNewTransactionData({
@@ -592,46 +316,303 @@ export default function NewServiceForm({
                             name="description"
                             id="description"
                         ></input>
-                    </InputContainer>
-                    <FoldedSection className="grid gap-2 py-2 w-full">
-                        {sampleData.map(
-                            (nam) =>
-                                nam != "idaccount" &&
-                                nam != "amount" &&
-                                nam != "description" && (
-                                    <div
-                                        key={nam + " additional"}
-                                        className="grid grid-cols-2 border-b-2 border-0 p-1 border-solid"
+                    </InputContainer_v2>
+                    {newTransactionData.description && (
+                        <>
+                            <InputContainer_v2 htmlFor="amount" title="$NET">
+                                <input
+                                    // min={1}
+                                    // autoFocus
+                                    autoComplete="off"
+                                    type="number"
+                                    name="amount"
+                                    id="amount"
+                                    readOnly={!manualEdit}
+                                    value={newTransactionData.amount}
+                                    onChange={(e) => {
+                                        percentCalculator(
+                                            e.target.name,
+                                            e.target.value
+                                        );
+                                    }}
+                                />
+                                <label
+                                    htmlFor="amount"
+                                    type="button"
+                                    onClick={() => setManualEdit(!manualEdit)}
+                                >
+                                    <IconLock locked={!manualEdit} />
+                                </label>
+                            </InputContainer_v2>
+                            <InputContainer_v2
+                                htmlFor="enablegarage"
+                                title="$Garage"
+                            >
+                                <input
+                                    checked={newTransactionData.enablegarage}
+                                    onChange={(e) => {
+                                        let val = e.target.checked;
+                                        // console.log(val);
+                                        let amount = newTransactionData.amount;
+                                        if (
+                                            !(
+                                                newTransactionData.enablesharing &&
+                                                val
+                                            )
+                                        ) {
+                                            amount = 0;
+                                        }
+                                        setNewTransactionData({
+                                            ...newTransactionData,
+                                            enablegarage: val,
+                                            amountgarage: 0,
+                                            amount,
+                                        });
+                                    }}
+                                    type="checkbox"
+                                    name="enablegarage"
+                                    id="enablegarage"
+                                />
+                                {/* {newTransactionData.enablegarage && ( */}
+                                <>
+                                    <select
+                                        name="idgarage"
+                                        className="hidden p-2"
+                                        id="idgarage"
+                                        readOnly
+                                        disabled
+                                        defaultValue="2"
                                     >
-                                        <label htmlFor={nam}>{nam}</label>
-                                        <input
-                                            readOnly={
-                                                newTransactionData[nam] &&
-                                                nam === "idjob"
-                                            }
-                                            onChange={(e) => {
-                                                setNewTransactionData({
-                                                    ...newTransactionData,
-                                                    [nam]: e.target.value,
-                                                });
-                                            }}
-                                            value={
-                                                newTransactionData[nam]
-                                                    ? newTransactionData[nam]
-                                                    : ""
-                                            }
-                                            name={nam}
-                                            id={nam}
-                                        ></input>
-                                    </div>
-                                )
-                        )}
-                    </FoldedSection>
-                    <ButtonSubmit disableOnClick={true}>
-                        {newTransactionData?.idtransaction
-                            ? "append"
-                            : "upload"}
-                    </ButtonSubmit>
+                                        <option value="2">garage</option>
+                                    </select>
+                                    <input
+                                        autoComplete="off"
+                                        required
+                                        readOnly={manualEdit}
+                                        value={newTransactionData?.amountgarage}
+                                        type="number"
+                                        name="amountgarage"
+                                        id="amountgarage"
+                                        min={0}
+                                        max={newTransactionData.amount}
+                                        onChange={sendToPercentCalculator}
+                                    />
+                                    <label
+                                        htmlFor="amountgarage"
+                                        type="button"
+                                        onClick={() =>
+                                            setManualEdit(!manualEdit)
+                                        }
+                                    >
+                                        <IconLock locked={manualEdit} />
+                                    </label>
+                                </>
+                                {/* )} */}
+                            </InputContainer_v2>
+                            <InputContainer_v2
+                                title="Technician"
+                                htmlFor="enablesharing"
+                            >
+                                <input
+                                    checked={newTransactionData.enablesharing}
+                                    onChange={(e) => {
+                                        let val = e.target.checked;
+                                        // console.log(val);
+                                        let amount = newTransactionData.amount;
+                                        if (
+                                            !(
+                                                newTransactionData.enablegarage &&
+                                                val
+                                            )
+                                        ) {
+                                            amount = 0;
+                                        }
+                                        setNewTransactionData({
+                                            ...newTransactionData,
+                                            enablesharing: val,
+                                            amountshared: 0,
+                                            amount,
+                                        });
+                                    }}
+                                    type="checkbox"
+                                    name="enablesharing"
+                                    id="enablesharing"
+                                />
+                                <AccountSelector_v2
+                                    allowedGroups={["employee", "agent"]}
+                                    name="idaccountshared"
+                                    idaccountin={
+                                        newTransactionData.idaccountshared
+                                            ? newTransactionData.idaccountshared
+                                            : 0
+                                    }
+                                    id="idaccountshared"
+                                    onChange={onChangeIdAccountShared}
+                                    required={newTransactionData.enablesharing}
+                                />
+                                {newTransactionData?.idaccountshared && (
+                                    <>
+                                        <div className="py-1  mx-auto  max-w-fit grid grid-cols-[1fr,auto,auto] gap-2 ">
+                                            <select
+                                                name="percent"
+                                                id="percent"
+                                                className=" w-20"
+                                                value={
+                                                    newTransactionData.percent
+                                                        ? newTransactionData.percent
+                                                        : 0
+                                                }
+                                                onChange={(e) => {
+                                                    percentCalculator(
+                                                        "percent",
+                                                        e.target.value
+                                                    );
+                                                }}
+                                            >
+                                                <optgroup label="common">
+                                                    <option value="0">
+                                                        0 %
+                                                    </option>
+                                                    <option value="5">
+                                                        5 %
+                                                    </option>
+                                                    <option value="10">
+                                                        10 %
+                                                    </option>
+                                                    <option value="15">
+                                                        15 %
+                                                    </option>
+                                                    <option value="20">
+                                                        20 %
+                                                    </option>
+                                                    <option value="25">
+                                                        25 %
+                                                    </option>
+                                                    <option value="30">
+                                                        30 %
+                                                    </option>
+                                                    <option value="50">
+                                                        50 %
+                                                    </option>
+                                                    <option value="100">
+                                                        100 %
+                                                    </option>
+                                                </optgroup>
+                                                <optgroup label="more">
+                                                    {[
+                                                        ...Array(101).keys(),
+                                                    ]?.map((vall, ind) => (
+                                                        <option
+                                                            key={ind}
+                                                            value={vall}
+                                                        >
+                                                            {vall} %
+                                                        </option>
+                                                    ))}
+                                                </optgroup>
+                                            </select>
+                                            <button
+                                                onClick={() => {
+                                                    if (manualEdit)
+                                                        setManualEdit(
+                                                            !manualEdit
+                                                        );
+                                                    else
+                                                        percentCalculator(
+                                                            "percent",
+                                                            newTransactionData.percent
+                                                        );
+                                                }}
+                                                type="button"
+                                                className="p-0 rounded-none"
+                                            >
+                                                <img
+                                                    className="   h-7"
+                                                    src={
+                                                        manualEdit
+                                                            ? "/public/images/lock_FILL0_wght400_GRAD0_opsz24.svg"
+                                                            : "/public/images/calculate.svg"
+                                                    }
+                                                    alt="edit"
+                                                />
+                                            </button>
+                                            <input
+                                                autoComplete="off"
+                                                value={
+                                                    newTransactionData?.amountshared
+                                                }
+                                                className=" w-20 "
+                                                type="number"
+                                                name="amountshared"
+                                                id="amountshared"
+                                                min={0}
+                                                max={newTransactionData.amount}
+                                                onChange={
+                                                    sendToPercentCalculator
+                                                }
+                                            />
+                                        </div>
+                                    </>
+                                )}
+                            </InputContainer_v2>
+                            <FoldedSection className="grid gap-2 py-2 w-full">
+                                {sampleData.map(
+                                    (nam) =>
+                                        nam != "idaccount" &&
+                                        nam != "amount" &&
+                                        nam != "description" && (
+                                            <div
+                                                key={nam + " additional"}
+                                                className="grid grid-cols-2 border-b-2 border-0 p-1 border-solid"
+                                            >
+                                                <label htmlFor={nam}>
+                                                    {nam}
+                                                </label>
+                                                <input
+                                                    readOnly={
+                                                        newTransactionData[
+                                                            nam
+                                                        ] && nam === "idjob"
+                                                    }
+                                                    onChange={(e) => {
+                                                        setNewTransactionData({
+                                                            ...newTransactionData,
+                                                            [nam]: e.target
+                                                                .value,
+                                                        });
+                                                    }}
+                                                    value={
+                                                        newTransactionData[nam]
+                                                            ? newTransactionData[
+                                                                  nam
+                                                              ]
+                                                            : ""
+                                                    }
+                                                    name={nam}
+                                                    id={nam}
+                                                ></input>
+                                            </div>
+                                        )
+                                )}
+                            </FoldedSection>
+                        </>
+                    )}
+                    <div className="grid gap-2 grid-cols-2">
+                        <ButtonSubmit_v2
+                            imgProps={{
+                                src: "/public/images/add_shopping_cart_FILL0_wght400_GRAD0_opsz24.svg",
+                            }}
+                        >
+                            Add
+                        </ButtonSubmit_v2>
+                        <ButtonSubmit_v2
+                            imgProps={{ src: "/public/images/doneall.svg" }}
+                        >
+                            {newTransactionData?.idtransaction
+                                ? "append"
+                                : "upload"}
+                        </ButtonSubmit_v2>
+                    </div>
                 </BasicForm>
             </BasicDialog>
         </>

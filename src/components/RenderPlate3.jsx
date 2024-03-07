@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import "./comp.css";
 import { GlobalState } from "../context/GlobalContext";
 import xaxios, { baseurl2 } from "../utils/xaxios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import CardPlateNo_v1 from "../layout/CardPlateNo_v1";
 // import { axioslinks } from "../preset/Var";
 /**
  *
@@ -10,6 +11,7 @@ import { useNavigate } from "react-router-dom";
  * @returns
  */
 export default function RenderPlate3({
+    inspection = undefined,
     display1 = "grid flex-wrap",
     plateobj = {
         idcar: 0,
@@ -24,8 +26,10 @@ export default function RenderPlate3({
         name: "unknown",
         gender: "",
         phoneno: "+251-",
-    }
+    },
+    ...props
 }) {
+    const className = "pt-1   max-h-[80%] max-w-[90%]    object-contain absolute-center mt-2";
     plateobj = plateobj || {
         idcar: 0,
         idclient: 0,
@@ -41,96 +45,49 @@ export default function RenderPlate3({
         phoneno: "+251-",
     };
     const navigate = useNavigate();
-    const { list_region } = useContext(GlobalState);
-    const colorcode = [
-        " max-w-fit text-red-700  border-red-700 ",
-        " max-w-fit text-blue-700  border-blue-700 ",
-        " max-w-fit text-green-700  border-green-700 ",
-        " max-w-fit text-black  border-black ",
-        " max-w-fit text-red-500  border-red-500 ",
-        " max-w-fit text-sky-500  border-sky-500 ",
-        " max-w-fit text-sky-500  border-sky-500 ",
-        " max-w-fit text-sky-500  border-sky-500 ",
-        " max-w-fit text-sky-500  border-sky-500 ",
-        " max-w-fit text-sky-500  border-sky-500 ",
-        " max-w-fit text-sky-500  border-sky-500 ",
-    ];
-    function regionRender(a) {
-        return (
-            plateobj.region && (
-                <div
-                    className={
-                        plateobj.region == 12
-                            ? "flex px-1 bg-yellow-400 flex-col text-sm leading-4  break-all w-min font-bold"
-                            : "  flex px-1 flex-col text-sm leading-4  break-all w-min font-bold"
-                    }
-                >
-                    {list_region[plateobj.region - 1][a]}
-                </div>
-            )
-        );
-    }
-    function openCar() {
-        if (plateobj.idcar)
-            navigate(`/nav/car/${plateobj.idcar}`, { replace: true });
-    }
+    
+    const carlink = inspection ? `/nav/inspections/car/${ plateobj.idcar}` : `/nav/cars/${ plateobj.idcar}`;
     // defualt return
     return (
-        <div
-            onClick={openCar}
-            className={` ${display1} p-1  bg-opacity-50   items-center  place-items-center `}
+        <Link
+        to={carlink}
+            // onClick={openCar}
+            className={` ${display1} p-1 bg-gray-100  bg-opacity-70   items-center  place-items-center `}
         >
-            <div className="caridmodel  w-48  items-start grid leading-5   h-28 overflow-hidden   z-10 relative">
+            <div className="caridmodel  w-48  items-start grid leading-5   h-28    z-10 relative">
                 <img
+                    onError={(e) => {
+                        if (e.currentTarget.src.includes("carlogos")) {
+                            e.currentTarget.className = " hidden  ";
+                            return;
+                        }
+                        e.currentTarget.className = className;
+                        e.currentTarget.src = `${baseurl2}/files/image/carlogos/${plateobj?.make?.trimEnd()}-logo.png`;
+                    }}
                     className="h-[120%] pt-1  w-48   absolute -z-10 object-cover  "
                     src={`${baseurl2}/files/image/cars/${plateobj.make}/${plateobj.model}.webp`}
                     alt=""
                 />
-                <span className="    bg-opacity-70      font-bold">
+                <span className=" -mx-1    bg-opacity-70      font-bold">
                     ({plateobj.idcar}) {plateobj.make} ({plateobj.model})
                 </span>
                 <span className="flex-1"></span>
             </div>
 
             <div className="flex items-strech gap-1">
-                <div
-                    className={
-                        colorcode[plateobj?.code - 1]
-                            ? `${
-                                  colorcode[plateobj?.code - 1]
-                              }    border-2  border-solid max-md:text-xs  rounded-md`
-                            : `  text-black  border-2 border-solid  border-black  rounded-md`
-                    }
-                >
-                    <div className=" bg-white plate_number flex items-center pl-1 border-inherit  gap-1 rounded-md">
-                        <div
-                            className={
-                                plateobj?.region > 11
-                                    ? "relative flex items-center justify-center   h-4 w-4 rounded-full font-bold  text-3xl"
-                                    : "relative flex items-center justify-center   h-4 w-4  border-2 border-solid border-inherit  rounded-full font-bold  text-xl"
-                            }
-                        >
-                            {plateobj.code}
-                        </div>
-                        {regionRender("am")}
-                        <div className="bg-gray-500 w-2 h-2"></div>
-                        <div className=" uppercase text-center text-3xl   leading-5  tracking-wider">
-                            {plateobj?.plate}
-                        </div>
-                        {regionRender("en")}
-                    </div>
-                </div>
+                
+                    <CardPlateNo_v1 plate={plateobj} />
                 {plateobj.color && (
-                <div className="relative  grid   ">
-                    <span className=" float-right px-1 z-10 right-0 bottom-full bg-gray-500 rounded-sm text-white absolute">
-                        {plateobj.color}
-                    </span>
-                    <div
-                        className={` z-40 relative w-8  rounded-md border-solid border-2  bg-${plateobj.color}-600`}
-                    ></div>
-                </div>
+                    <div className="relative  grid   ">
+                        <span className=" float-right px-1 z-10 right-0 bottom-full bg-gray-500 rounded-sm text-white absolute">
+                            {plateobj.color}
+                        </span>
+                        <div
+                            className={` z-40 relative w-8  rounded-md border-solid border-2  bg-${plateobj.color}-600`}
+                        ></div>
+                    </div>
                 )}
             </div>
-        </div>
+        </Link>
     );
 }

@@ -90,7 +90,7 @@ export default function RenderPlate2({
     }
     function openCar() {
         if (objcopy.idcar)
-            navigate(`/nav/car/${objcopy.idcar}`, { replace: true });
+            navigate(`/nav/cars/${objcopy.idcar}`);
     }
     // defualt return
     return objcopy ? (

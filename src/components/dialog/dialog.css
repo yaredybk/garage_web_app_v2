@@ -1,8 +1,7 @@
 dialog::backdrop {
-    background-color: hsla(0, 2%, 64%, 0.776);
-    backdrop-filter: blur(2px);
+    background-color: hsla(0, 0%, 30%, 0.9);
 }
 dialog {
-    border: none;
+    border: 1px var(--accent-color1) solid;
     border-radius: 4px;
 }

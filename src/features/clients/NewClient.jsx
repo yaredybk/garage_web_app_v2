@@ -8,7 +8,11 @@ import { LoadingState } from "../../context/LoadingContext";
 import ButtonSubmit from "../../components/button/ButtonSubmit";
 import IconSmall from "../../components/IconSmall";
 
-export default function NewClient({ openClient = null, modal = null }) {
+export default function NewClient({
+    onNewRegistration = (insertId) => null,
+    openClient = null,
+    modal = null,
+}) {
     const { load, setLoad } = useContext(LoadingState);
     // console.log(load);
     // setLoad(true);
@@ -23,6 +27,7 @@ export default function NewClient({ openClient = null, modal = null }) {
                     if (dd.insertId) {
                         // modal && document.getElementById(modal)?.close();
                         openClient && openClient(dd.insertId);
+                        onNewRegistration(dd.insertId);
                     }
                 })
                 .catch(console.log);
@@ -37,7 +42,10 @@ export default function NewClient({ openClient = null, modal = null }) {
                         setunregistered(true);
                     }
                 })
-                .catch(console.log);
+                .catch((err) => {
+                    console.log(err);
+                    openClient && openClient(dd.insertId);
+                });
     }
     return (
         <div id="newclientform">
@@ -52,20 +60,18 @@ export default function NewClient({ openClient = null, modal = null }) {
                     </span>
                 }
             >
-                {unregistered ? (
-                    <button
-                        className=" float-right  bg-red-500  "
-                        type="button"
-                        onClick={clearForm}
-                    >
-                        clear form
-                    </button>
-                ) : null}
                 {true && (
                     <InputContainer htmlFor="Phone">
                         <span>+251 </span>
                         <input
-                            onChange={() => setunregistered(false)}
+                            onChange={(e) => {
+                                if (e.target.value?.match(/^\+251|^251|^0/))
+                                    e.target.value?.replace(
+                                        /^\+251|^251|^0/,
+                                        ""
+                                    );
+                                setunregistered(false);
+                            }}
                             type="text"
                             inputMode="numeric"
                             name="Phone"
@@ -108,7 +114,35 @@ export default function NewClient({ openClient = null, modal = null }) {
                     </InputContainer>
                 )}
 
-                <ButtonSubmit title={unregistered ? "register" : "check ?"} />
+                <ButtonSubmit
+                    title={
+                        unregistered ? (
+                            <>
+                                <IconSmall
+                                    src="/public/images/doneall.svg"
+                                    alt=""
+                                />
+                                register
+                            </>
+                        ) : (
+                            <>
+                                <IconSmall
+                                    src="/public/images/search.svg"
+                                    alt=""
+                                />{" "}
+                                check{" "}
+                            </>
+                        )
+                    }
+                />
+                <button
+                    className=" float-right  bg-red-500  "
+                    type="button"
+                    onClick={clearForm}
+                >
+                    <IconSmall src="/public/images/close.svg" />
+                    clear
+                </button>
             </BasicForm>
         </div>
     );

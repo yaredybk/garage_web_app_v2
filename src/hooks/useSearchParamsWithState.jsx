@@ -19,12 +19,12 @@ export default function useSearchParamsWithState(defaultParams = {}) {
     function setSingleParams([key = "ignore", value = "null"]) {
         const newSearchParams = new URLSearchParams(searchParams);
         newSearchParams.set(key, value);
-        setSearchParams(newSearchParams, { replace: true });
+        setSearchParams(newSearchParams);
         setParams({ ...params, [key]: value });
     }
     function setAllParams() {
         const newSearchParams = new URLSearchParams(searchParams);
-        setSearchParams(newSearchParams, { replace: true });
+        setSearchParams(newSearchParams);
         setParams({ ...defaultParams, ...newSearchParams });
     }
     useEffect(() => {

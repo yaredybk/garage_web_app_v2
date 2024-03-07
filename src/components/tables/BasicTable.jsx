@@ -10,18 +10,20 @@ import "./basictable.css";
  */
 export default function BasicTable({
     data,
+    nodatamessage="No data!",
     onRowClickIndex = null,
     rowObjectUP = null,
     colIndex = 0,
     color = " bgblue ",
     indexClicked = null,
+    colsin=[]
 }) {
     if (!(Array.isArray(data) && data.length))
         return (
             <table className=" basic-table bgred bg-red-300 text-red-800">
                 <tbody>
                     <tr>
-                        <td>NO DATA</td>
+                        <td>{nodatamessage}</td>
                     </tr>
                 </tbody>
             </table>
@@ -29,11 +31,17 @@ export default function BasicTable({
     let tmp = isNaN(colIndex) ? 0 : colIndex;
     let clickColName;
     if (tmp && data[0]) clickColName = Object.keys(data[0])[tmp];
+    if(colsin.length){
+        colsin = colsin.filter((val)=>Object.hasOwn(data[0],val))
+    }
+    else{
+        colsin = Object.keys(data[0])
+    }
     return (
         <table className={"basic-table " + color}>
             <thead>
                 <tr>
-                    {Object.keys(data[0])?.map((key, ind) => (
+                    {colsin?.map((key, ind) => (
                         <th key={key + "header" + ind}>{key}</th>
                     ))}
                 </tr>
@@ -45,13 +53,13 @@ export default function BasicTable({
                             indexClicked && indexClicked(ind);
                             onRowClickIndex &&
                                 onRowClickIndex(obj[clickColName]);
-                            rowObjectUP && rowObjectUP(obj);
+                            rowObjectUP && rowObjectUP(obj,ind);
                         }}
                         key={"body row" + ind}
                     >
-                        {Object.keys(obj)?.map((key, ind) => (
+                        {colsin?.map((key, ind) => (
                             <td
-                                className={" col-" + key}
+                                className={"  col-" + key}
                                 key={key + "body td" + ind}
                             >
                                 {obj[key]}

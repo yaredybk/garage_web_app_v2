@@ -4,59 +4,71 @@ import { openCloseMiniPop } from "./userInterface";
 const { hostname, protocol, host, port } = window.location;
 const devport = "3030";
 const devSecurePort = "5005";
-let devlinktmp = protocol + "//" + hostname + ":5100";
-const baseurl = process.env.NODE_ENV === "development" ? devlinktmp : "";
-export const baseurl2 = baseurl;
+
+// let devlinktmp = protocol + "//" + hostname + ":5100";
+let devlinktmp = protocol + "//" + hostname + ":5050";
+// const baseurl = process.env.NODE_ENV === "development" ? devlinktmp : "";
+const baseurl = "";
+// export const baseurl2 = baseurl;
+export const baseurl2 = "";
+// let timeout = 1000;
+// export function setStatusAxios(Status="noserver") {
+//     status=Status;
+//     if(status == "noserver") timeout = 1000;
+//     else timeout = 30000;
+// }
 export async function GetData(url, setloading = () => null) {
     // loadingReducer?.dispatch(true);
     // const { load } = useContext(LoadingState);
     // console.log(load);
     return new Promise((resolve, reject) => {
         setloading(true);
-        if (status == "local") {
-            axios
-                .get(baseurl + url)
-                .then((res) => {
-                    // console.log(res.data);
-                    resolve(res.data);
-                })
-                .catch((err) => {
-                    console.log(url, err?.response);
-                    openCloseMiniPop(
-                        "fail! " +
-                            (err?.response?.data?.sqlMessage
-                                ? err?.response?.data?.sqlMessage
-                                : "E0"),
-                        "open",
-                        "red",
-                        5000
-                    );
-                    reject(err);
-                })
-                .finally(() => {
-                    setloading(false);
-                });
-        } else {
-            axios
-                .get(baseurl + url)
-                .then((res) => {
-                    // console.log(res.data);
-                    resolve(res.data);
-                })
-                .catch((err) => {
-                    console.log(url, err?.response);
-                    openCloseMiniPop(
-                        "fail! " + (err.response?.data?.sqlMessage || "E0"),
-                        "open",
-                        "red",
-                        5000
-                    );
-                    reject(err);
-                })
-                .finally(() => {
-                    setloading(false);
-                });
-        }
+        // if (status == "local") {
+        //     axios
+        //         .get(baseurl + url)
+        //         .then((res) => {
+        //             // console.log(res.data);
+        //             resolve(res.data);
+        //         })
+        //         .catch((err) => {
+        //             console.log(url, err?.response);
+        //             openCloseMiniPop(
+        //                 "Error! " +
+        //                     (err?.response?.data?.sqlMessage
+        //                         ? err?.response?.data?.sqlMessage
+        //                         : "E0"),
+        //                 "open",
+        //                 "red",
+        //                 5000
+        //             );
+        //             reject(err);
+        //         })
+        //         .finally(() => {
+        //             setloading(false);
+        //         });
+        // } else {
+        axios
+            .get(baseurl + url)
+            .then((res) => {
+                // console.log(res.data);
+                resolve(res.data);
+            })
+            .catch((err) => {
+                // console.log(url, err?.response);
+                openCloseMiniPop(
+                    "Error! " + (err?.response?.data?.sqlMessage ||
+                        err?.response?.statusText ||
+                        "E0"),
+                    "open",
+                    "red",
+                    5000
+                );
+                reject(err);
+            })
+            .finally(() => {
+                setloading(false);
+            });
+        // }
     });
 }
 // please pass the set loading function
@@ -84,13 +96,13 @@ async function post(url, data, setloading = () => null) {
                 );
             })
             .catch((err) => {
-                console.log(url, err?.response);
+                // console.log(url, err?.response);
                 setloading(false);
                 openCloseMiniPop(
-                    "fail! " +
-                        (err?.response?.data?.sqlMessage
-                            ? err?.response?.data?.sqlMessage
-                            : "E0"),
+                    "Error! " +
+                        (err?.response?.data?.sqlMessage ||
+                            err?.response?.statusText ||
+                            "E0"),
                     "open",
                     "red",
                     6000
@@ -130,17 +142,20 @@ async function delete_(url, data, setloading = () => null) {
                 );
             })
             .catch((err) => {
-                console.log(url, err?.response);
+                // console.log(url, err?.response);
                 setloading(false);
                 openCloseMiniPop(
-                    "fail! " +
-                        (err?.response?.data?.sqlMessage
-                            ? err?.response?.data?.sqlMessage
-                            : "E0"),
+                    "Error! " +
+                        (err?.response?.data?.sqlMessage ||
+                            JSON.stringify(err.response))
+                            ||
+                            err?.response?.statusText 
+                            ,
                     "open",
                     "red",
                     6000
                 );
+                // console.log(err);
                 reject(err);
             })
             .finally(() => {
@@ -152,5 +167,5 @@ async function delete_(url, data, setloading = () => null) {
             });
     });
 }
-const xaxios = { post, GetData, delete: delete_ };
+const xaxios = { post, GetData, get: GetData, delete: delete_ };
 export default xaxios;

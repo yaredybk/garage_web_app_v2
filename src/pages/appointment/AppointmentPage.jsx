@@ -29,7 +29,7 @@ export default function AppointmentPage() {
     const [refreshlist, setrefreshlist] = useState(0);
     // const navigate = useNavigate();
     return (
-        <div className="appointment grid gap-1">
+        <main className="appointment grid gap-1">
             <ClockBig />
             <h2>Appointments</h2>
             <button
@@ -70,7 +70,7 @@ export default function AppointmentPage() {
                 key={refreshlist}
                 rowObjectUP={(obj) => openEditAppt(obj?.idappt)}
             />
-        </div>
+        </main>
     );
     function openClient(clientid) {
         setInfo({ ...info, editId: clientid });

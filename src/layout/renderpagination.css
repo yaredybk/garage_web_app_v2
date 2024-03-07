@@ -1,0 +1,40 @@
+.pagination{
+    padding: 4px 0px;
+    grid-column: 1 / -1;
+    background-color: rgba(203, 203, 203, 0.338);
+    /* gap: 5px; */
+    position: relative;
+    display: grid;
+    /* display: flex; */
+    grid-template-columns: 2rem auto auto 2rem;
+    *{
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .sub{
+        .active{
+            background-color: cyan;
+        }
+        display: flex;
+        gap: 5px;
+        overflow: auto;
+        &.b{
+            justify-content: start;
+            padding:0px 3px;
+            flex: 1;
+        }
+        &.a{
+            padding:0px 3px;
+            justify-content: end;
+            flex: 1;
+        }
+        >*{
+            min-width: 2rem;
+            max-width: 10rem;
+            flex-basis: 3rem;
+            flex: 1;
+        }
+    }
+}

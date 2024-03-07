@@ -1,25 +1,32 @@
-@tailwind utilities;
-@font-face {
-    font-family: "license";
-    src: url("/public/fonts/licensePlate2.ttf");
-    src: url("/public/fonts/licensePlate2.ttf") format("truetype");
-    /* font-display: swap; */
+* {
+    box-sizing: border-box;
 }
-.tiketnumber{
-    font-family: "license",'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: red;
-    background-color: white;
-    padding: 2px;
-    font-size: 1.5rem;
-}
+
 :root {
+    --base-color: black;
+    --base-bg: white;
+    --accent-color: purple;
+    --accent-color1: purple;
+    --accent-color2: rgb(13, 13, 188);
+    --washed-color2: rgb(68, 68, 153);
+    --accent-color3: rgb(13, 13, 188);
+    --washed-color3: rgb(68, 68, 153);
+    --btn-bg: rgb(205, 206, 255);
+    --btn-hover-bg: hsl(239, 100%, 64%);
+    --btn-hover-color: hsl(0, 0%, 100%);
+    --btn-hover-shadow: hsl(217, 88%, 60%);
+    --gray15: hsl(0, 0%, 15%);
+    --gray35: hsl(0, 0%, 35%);
+    --gray50: hsl(0, 0%, 50%);
+    --gray65: hsl(0, 0%, 65%);
+    --gray85: hsl(0, 0%, 85%);
     /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif, license; */
     /* line-height: 1.5; */
     /* font-weight: 400; */
 
-    /* color-scheme: light dark; */
-    /* color: rgba(255, 255, 255, 0.87); */
-    /* background-color: #242424; */
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
 
     /* font-synthesis: none; */
     /* text-rendering: optimizeLegibility; */
@@ -27,11 +34,102 @@
     /* -moz-osx-font-smoothing: grayscale; */
     /* -webkit-text-size-adjust: 100%; */
 }
+html {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
+    /* font-family: Georgia, "Times New Roman", Times, serif; */
+    /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+    /* font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif; */
+    letter-spacing: 1px;
+    /* scrollbar-gutter: stable; */
+    /* font-family: Verdana, sans-serif; */
+    /* background-color: #9c38ee;
+    background-color: #9c38ee; */
+}
+
+@tailwind utilities;
+@font-face {
+    font-family: "license";
+    src: url("/public/fonts/licensePlate2.ttf");
+    src: url("/public/fonts/licensePlate2.ttf") format("truetype");
+    /* font-display: swap; */
+}
 body {
+    /* zoom: 1; */
+    /* max-width: min(50rem , 100%); */
+
+    /* transform-origin: 0 0; */
+
     scrollbar-width: thin;
     scrollbar-color: #f00 #00f;
     margin: 0px;
     padding: 0px;
+}
+#root {
+    --header-height: 2.8rem;
+    margin: 0;
+    padding: 0px;
+    display: grid;
+    grid-template-rows: var(--header-height) 1fr;
+    grid-template-rows: var(--header-height) calc(100vh - var(--header-height));
+    grid-template-columns: 1fr;
+    grid-template-areas: "head" "main";
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    max-height: 100dvh;
+    /* overflow: hidden; */
+
+    > :nth-child(2),
+    main {
+        &.bg-image {
+            background: url("/public/bg/tesla-1.jpg") center center no-repeat fixed;
+            background-size:cover;
+        }
+        align-content: start;
+        min-height: calc(100dvh - var(--header-height));
+        overflow: auto;
+        /* height: calc(100vh); */
+        grid-area: main;
+        padding-bottom: 1rem;
+    }
+    header {
+        grid-area: head;
+    }
+    /* min-height: 100vh; */
+    /* min-height: 100dvh; */
+    margin: 0px;
+    /* max-width: 1280px; */
+    /* background-color: aqua; */
+    /* border: 2px black solid; */
+    /* text-align: center; */
+    /* url("/public/images/car3.jpg") bottom center no-repeat; */
+    /* min-height: 100dvh; */
+    /* background-color: rgba(2, 189, 2, 0.1); */
+    /* display: block; */
+    /* background-position: center; */
+    /* background-attachment: fixed; */
+}
+@media (max-width: 720px) {
+    #root {
+        height: 100dvh;
+        grid-template-rows: auto var(--header-height);
+        grid-template-rows: calc(100vh - var(--header-height)) var(
+                --header-height
+            );
+        grid-template-areas: "main" "head";
+        header {
+            position: sticky;
+            bottom: 0px;
+        }
+    }
+}
+.tiketnumber {
+    font-family: "license", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: red;
+    background-color: white;
+    padding: 2px;
+    font-size: 1.5rem;
 }
 h1 {
     text-decoration: underline rgb(164, 164, 164) 1px;
@@ -58,17 +156,14 @@ h5 {
 /* Make the scrollbar thin */
 ::-webkit-scrollbar {
     width: 8px;
-    padding: 2px;
 }
 
 /* Make the scrollbar track colorful */
 ::-webkit-scrollbar-track {
-    background-color: rgb(0, 0, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
 /* Make the scrollbar thumb colorful */
 ::-webkit-scrollbar-thumb {
-    background-color: rgb(0, 0, 109);
-    width: 4px;
-    padding: 2px;
+    background-color: var(--accent-color1);
 }

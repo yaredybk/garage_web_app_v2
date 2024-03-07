@@ -16,7 +16,8 @@ function closeallmodals() {
     });
     return;
 }
-export function openCloseModal(modalid, action, closemodalid) {
+export async function  openCloseModal(modalid="", action=undefined|"open"|"close"|"closeopen"|"openmini"|"all", closemodalid) {
+    // console.log(modalid,action);
     let curloc = new URL(document.location.href);
     curloc.searchParams.delete("pop");
     if (modalid === "all") {
@@ -28,8 +29,8 @@ export function openCloseModal(modalid, action, closemodalid) {
     const modall = document.getElementById(modalid);
     if (action == "close" || action == "exit") {
         popstatefunction("manually closed!");
-        window.history.back();
-        return modall?.close();
+        modall?.close();
+        return  window.history.back();
     }
     if (action == "closeopen") {
         curloc.searchParams.append("pop", modalid);
@@ -57,9 +58,9 @@ export function openCloseModal(modalid, action, closemodalid) {
 }
 export function openCloseMiniPop(
     text = null,
-    action = "open",
-    classNamein = "",
-    delay = 2000
+    action = "open" || undefined,
+    classNamein = "green" || "red" || undefined,
+    delay = 2000 || undefined
 ) {
     let stamp = Date.now().toString();
     const poptext = document.getElementsByClassName("mini_pop_window_text");

@@ -18,6 +18,7 @@ import RenderObject from "../../features/clients/RenderObject";
 import NewServiceForm from "./NewServiceForm";
 import TableWithSubtotal from "../../components/tables/TableWithSubtotal";
 import { replacement } from "./../../components/calculator/lib/ResultPanel";
+import InputContainer_v2 from "../../components/input/InputContainer_v2";
 
 export default function EditJobTransaction({
     transactions = [],
@@ -52,21 +53,24 @@ export default function EditJobTransaction({
                         value={TableRowDataForEditing?.id}
                     />
                 </div>
-                description
+                <InputContainer_v2 title="status">{TableRowDataForEditing?.status} %</InputContainer_v2>
+                <InputContainer_v2 title="total">{TableRowDataForEditing?.amount * 1} Br.</InputContainer_v2>
+                <InputContainer_v2 title="description">
+                    <input
+                        type="text"
+                        name="description"
+                        id="description"
+                        className="px-2 animate-ping-1 "
+                        defaultValue={TableRowDataForEditing?.description}
+                        // onChange={(e) =>
+                        //     setTableRowDataForEditing({
+                        //         ...TableRowDataForEditing,
+                        //         description: e.target.value,
+                        //     })
+                        // }
+                    />
+                </InputContainer_v2>
                 <br />
-                <input
-                    type="text"
-                    name="description"
-                    id="description"
-                    className="px-2 animate-ping-1 mb-2"
-                    defaultValue={TableRowDataForEditing?.description}
-                    // onChange={(e) =>
-                    //     setTableRowDataForEditing({
-                    //         ...TableRowDataForEditing,
-                    //         description: e.target.value,
-                    //     })
-                    // }
-                />
                 <ButtonSubmit>Update</ButtonSubmit>
             </BasicForm>
             <FoldedSection>
@@ -114,6 +118,7 @@ export default function EditJobTransaction({
         openCloseModal("all", "close");
         addNewTransactionToJob(tmp1, {
             idtransaction: TableRowDataForEditing?.id,
+            ...TableRowDataForEditing
         });
     }
     function refetchJobTransaction() {

@@ -1,31 +1,117 @@
-.inspection{
-    display: grid;
-    /* max-width: 200mm; */
-    min-height: 290mm;
-    grid-template-rows: min-content auto;
-    /* deleteme */
-    /* background-color:chartreuse;  */
-    margin: 3mm;
-    
+.inspection {
+    column-span: all;
+    max-width: 200mm;
+    &.preview {
+        /* display: grid; */
+        min-height: 290mm;
+        min-width: 200mm;
+        grid-template-rows: min-content auto;
+        /* deleteme */
+        /* background-color:chartreuse;  */
+        margin: 3mm;
+        align-items: start;
+    }
+    .systems-list {
+        grid-column: 1 / -1;
+        margin-bottom: auto;
+        /* display: grid; */
+        gap: 1rem;
+        .sub-system-list {
+            /* grid gap-4 border-solid border-0 border-b m-0 p-1 */
+            display: grid;
+            margin: 0px;
+            padding: 4px 0px;
+            gap: 4px;
+            li {
+                /* flex flex-wrap gap-1 */
+                display: flex;
+                justify-content: flex-start;
+                /* justify-content: start; */
+                flex-wrap: wrap;
+                gap: 4px;
+                padding: 0.3rem 2px;
+
+                button {
+                    /* className="bg-gray-300 p-1 flex-1 rounded-md" */
+                    background-color: rgba(244, 244, 244, 0.65);
+                    padding: 4px 0.5rem;
+                    border-radius: 2px;
+                    /* flex: 1; */
+                    max-height: 2rem;
+                    /* overflow: hidden; */
+                }
+                background-color: rgb(243, 243, 243);
+                button:first-child {
+                    pointer-events: none;
+                    background-color: transparent;
+                    font-weight: bold;
+                    color: rgb(117, 0, 146);
+                    margin-right: auto;
+
+                    flex-shrink: 0;
+                }
+                button:last-child {
+                    min-width: 5rem;
+                    box-shadow: 0px 0px 3px 1px gray;
+                }
+                &:nth-child(even) {
+                    background-color: rgb(223, 223, 223);
+                }
+                &:has(.rating) {
+                    background-color: rgba(255, 0, 0, 0.2);
+                }
+                .rating.bad {
+                    background-color: red;
+                }
+                &:has(.excellent) {
+                    background-color: rgba(0, 128, 0, 0.2);
+                }
+                .rating.excellent {
+                    background-color: rgb(0, 255, 0);
+                    color: black;
+                }
+                &:has(.good) {
+                    background-color: rgba(0, 0, 255, 0.2);
+                }
+                .rating.good {
+                    background-color: rgb(164, 241, 0);
+                    color: black;
+                }
+                &:has(.not-good) {
+                    background-color: rgba(255, 255, 0, 0.2);
+                }
+                .rating.not-good {
+                    background-color: yellow;
+                }
+            }
+        }
+    }
+    &.edit {
+        padding: 1px;
+    }
 }
-.garage_info{
+.garage_info {
     display: grid;
     grid-template-columns: 1fr 2fr;
 
     column-gap: 1rem;
 }
-.inspection_header{
+.inspection_header {
     /* border-solid border-b-2  border-0 grid grid-cols-[auto,min-content] */
     display: grid;
     grid-template-columns: auto min-content;
     border-bottom: double 4px gray;
 }
-.inspection_header .vehicle_info{
+.inspection_header .vehicle_info {
     border-left: 1px gray dashed;
     display: grid;
     grid-template-columns: auto 4rem;
-    .additional_info:last-child{
+    .additional_info:last-child {
         border-bottom: none;
-
+    }
+}
+@media print {
+    #root .inspection .systems-list li button{
+        display: block !important;
     }
 }

@@ -1,46 +1,51 @@
-.btn-cyn {
-    /* margin-left: auto;
-    margin-right: auto; */
-    padding: 0.5rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    background-color: rgb(6, 223, 223);
-    border: none;
-    border-radius: 0.3rem;
-    font-weight: bold;
-}
-.btn-blue {
-    /* margin-left: auto;
-    margin-right: auto; */
+.btn,
+*[role="button"],
+/* #root a[role="button"], */
+button {
+    color: black;
+    max-width: 20rem;
     padding: 0.5rem 1rem;
-    background-color: rgb(88, 88, 227);
-    color: aliceblue;
-    border: none;
     border-radius: 0.5rem;
     font-weight: bold;
-    min-height: 2rem;
+    font-size: 1rem;
+    background-color: var(--btn-bg);
+    text-align: center;
+    cursor: pointer;
+    display: inline-flex;
+    place-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: transform ease-out 0.2s;
+    box-shadow:0px 2px 5px  1px gray;
+    &:hover {
+        transform: scale(0.97);
+        transition: transform box-shadow ease-in 1s;
+        background-color: var(--btn-hover-bg);
+        color: var(--btn-hover-color);
+        box-shadow:0px 3px 8px  2px var(--btn-hover-shadow);
+    }
+    &:disabled,
+    &.mybtn:disabled {
+        transition: all ease-in 0.1s 0.3;
+        background-color: gray;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+}
+.btn-cyn {
+    background-color: rgb(6, 223, 223);
+}
+.btn-blue {
+    background-color: rgb(88, 88, 227);
+    color:white;
 }
 .btn-red {
     /* margin-left: auto;
     margin-right: auto; */
-    padding: 0.3rem 1rem;
+    /* padding: 0.3rem 1rem; */
     background-color: rgb(246, 95, 95);
-    color: aliceblue;
-    border: none;
-    border-radius: 0.5rem;
-    font-weight: bold;
 }
-.mybtn {
-    /* margin-left: auto;
-    margin-right: auto; */
-    padding: 0.3rem 1rem;
-    /* font-size: 0.8rem;
-    line-height: 1; */
-    color: aliceblue;
-    border: none;
-    border-radius: 0.3rem;
-    font-weight: bold;
-}
+
 .mybtn.red {
     background-color: rgb(246, 95, 95);
 }
@@ -55,33 +60,10 @@
 }
 
 .btn-basic {
-    padding: 0.5rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
     background-color: rgb(73, 73, 238);
     border: none;
     border-radius: 0.5rem;
     font-weight: bold;
-}
-button:hover {
-    filter: hue-rotate(20deg);
-    box-shadow: 0px 0px 10px rgb(65, 65, 65);
-    /* color: white; */
-}
-button {
-    text-align: center;
-    cursor: pointer;
-    display: flex;
-    place-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-button:disabled,
-button.mybtn:disabled {
-    transition: all ease-in 0.1s 0.3;
-    background-color: gray;
-    cursor: not-allowed;
-    box-shadow: none;
 }
 @media print {
     #root button,
@@ -92,3 +74,26 @@ button.mybtn:disabled {
         display: none;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

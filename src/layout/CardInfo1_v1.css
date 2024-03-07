@@ -1,0 +1,97 @@
+.card.info1.v1 {
+    display: grid;
+    background-color:rgb(240, 240, 240);
+    padding: 0px;
+    margin: 0px;
+    color: var(--base-color);
+    overflow: hidden;
+    border-radius: 0.3rem ;
+    outline: 1px solid var(--accent-color);
+    place-items:stretch ;
+    justify-content: stretch;
+    &:hover{
+        box-shadow: 0px 2px 5px 2px rgb(221, 0, 221);
+        /* scale: 1; */
+        img {
+            scale: 1.1;
+            transition: all ease-out 0.3s;
+        }
+    }
+    .container {
+        display: grid;
+        gap: 1px;
+        min-width: 8rem;
+        min-height: 7rem;
+        grid-template-rows: min-content 0rem auto min-content;
+        position: relative;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            z-index: 1;
+        }
+        > div {
+            padding: 2px 4px;
+        }
+        .header1 {
+            text-align: left;
+            padding: 5px;
+            font-weight: bold;
+            overflow-x: hidden;
+            background-color: var(--accent-color);
+            min-width: max-content;
+            color: white;
+        }
+        .header2 {
+            padding: 5px;
+            color: white;
+            position: absolute;
+            /* float: right; */
+            right: 0px;
+            font-weight: bold;
+            background-color: var(--gray15);
+        }
+        .header3 {
+            font-weight: bold;
+        }
+        .header4 {
+            padding-left: 0.5rem;
+            font-weight: bold;
+            color: hsl(0, 100%, 40%);
+        }
+        .icon1 {
+            display: grid;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            img {
+                object-fit: contain;
+                max-width: 100%;
+                max-height: 15rem;
+            }
+        }
+        div.footer1 {
+            /* background-color:white; */
+            display: flex;
+            gap: 1px;
+            justify-content: space-around;
+            align-items: stretch;
+        }
+        .fleft {
+            max-width: fit-content;
+        }
+        .fmid {
+            display: grid;
+            justify-content: center;
+            text-align: center;
+        }
+        .fright {
+            max-width: min-content;
+        }
+    }
+}
+@media (prefers-color-scheme: dark) {
+    .card.info1.v1 {
+        background-color: rgba(108, 108, 108, 0.752);
+        color: white;
+    }
+}

@@ -53,7 +53,7 @@ export default function NewTransaction() {
     ];
 
     return (
-        <div className=" newtransaction">
+        <main className=" newtransaction">
             <div className="grid gap-2 w-fit place-content-center m-auto min-h-[60vh] ">
                 <div className="forsecretary rounded-t-lg rounded-b-md grid outline outline-blue-600">
                     <span className="bg-blue-600 pl-2 font-semibold text-white">
@@ -167,7 +167,7 @@ export default function NewTransaction() {
             <BasicDialog id="View/pay salary">
                 {popwindow && <Viewsalary list_accounts={list_accounts} />}
             </BasicDialog>
-        </div>
+        </main>
     );
     function sendTransactionData(datain) {
         // return console.log(datain);

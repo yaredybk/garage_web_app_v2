@@ -22,8 +22,8 @@ export default function MiniPopup() {
             ></span>
             <button
                 onClick={() => openCloseMiniPop("", "close")}
-                className=" shadow-md shadow-black absolute right-0  items-center top-0  p-1 border-none 
-                font-bold bg-red-400 hover:bg-red-500"
+                className="  absolute right-0  items-center top-0  p-1 border-none 
+                font-bold bg-red-200 bg-opacity-60 hover:bg-red-500"
             >
                 <IconSmall src="/public/images/close.svg" />
             </button>

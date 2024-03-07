@@ -3,10 +3,12 @@ export default function FoldedSection({
     className = "",
     title = "more details",
     color = "gray",
+    open=false,
     ...props
 }) {
     return (
         <details
+            open={open}
             className={
                 "rounded-md overflow-hidden outline outline-1 outline-gray-700    " +
                 className

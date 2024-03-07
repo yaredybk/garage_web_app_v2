@@ -22,14 +22,23 @@ import ButtonSubmit from "./../button/ButtonSubmit";
  * @returns
  */
 export default function AdvancedForm({
-    fields,
+    fields = [
+        {
+            readOnly: false,
+            title: "no title",
+            type: "test",
+            equired: false,
+            defaultValue: "",
+            pattern
+        },
+    ],
     title = "form",
     className = "",
     onSubmit = null,
     onChange = null,
     removeEmpty = false,
     formClass = "",
-    action = "Submit",
+    action = "Submit"
 }) {
     return Array.isArray(fields) ? (
         <div>
@@ -57,6 +66,7 @@ export default function AdvancedForm({
                             </select>
                         ) : (
                             <input
+                            pattern={obj?.pattern}
                                 readOnly={obj?.readOnly}
                                 name={obj?.title}
                                 id={obj?.title}

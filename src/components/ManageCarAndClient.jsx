@@ -48,6 +48,7 @@ export function ManageClientAndCar({ minimal = false }) {
             <BasicDialog id="clientwindow">
                 {infoo.clientId && (
                     <RenderClient
+                    minimal={"tiny"}
                         clientid={infoo.clientId}
                         key={infoo.clientId}
                     />

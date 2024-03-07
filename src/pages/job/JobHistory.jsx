@@ -28,13 +28,13 @@ export default function JobHistory({type="job", idcar = 63, count = 1 }) {
     const navigate = useNavigate();
     function goto(jobinfoin) {
         jobinfoin.idjob &&
-            navigate(`/nav/job/${jobinfoin.idjob}`, { replace: true });
+            navigate(`/nav/jobs/edit/${jobinfoin.idjob}`);
     }
     return (
         <FoldedSection
             open
             color="violet"
-            title="vehicle job history"
+            title="vehicle history"
             className="  bg-violet-300 "
         >
             <div className="flex flex-wrap   gap-2 m-1">
@@ -91,11 +91,12 @@ export default function JobHistory({type="job", idcar = 63, count = 1 }) {
                             </table>
                         );
                     })) || (
-                    <span className="  warning red w-44 ">
+                    <span className=" mx-auto px-5 py-2 my-4  warning red w-60 ">
                         this vehicle does not have any history
                     </span>
                 )}
             </div>
+            {JobHisData.list1?.length > 0 &&
             <ButtonSubmit
                 className=" p-2 bg-violet-800  text-white m-1"
                 onClick={() => {
@@ -103,7 +104,7 @@ export default function JobHistory({type="job", idcar = 63, count = 1 }) {
                 }}
             >
                 more history
-            </ButtonSubmit>
+            </ButtonSubmit>}
         </FoldedSection>
     );
 }

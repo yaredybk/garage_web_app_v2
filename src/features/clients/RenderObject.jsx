@@ -3,6 +3,7 @@
  * @param {object} obj input object to render
  * @returns render object key and value pair
  */
+
 export default function RenderObject({ obj = null }) {
     return obj ? (
         <table className="basic-table  box-border  border-gray-400 m-1  ">
@@ -12,7 +13,7 @@ export default function RenderObject({ obj = null }) {
                         (val, ind) =>
                             val != "checkin" && (
                                 <tr
-                                    className=" overflow-hidden text-left border p-2   border-black  "
+                                    className=" odd:bg-lime-100 even:bg-lime-200 hover:bg-red-400 overflow-hidden text-left border p-2   border-black  "
                                     key={"info" + ind}
                                 >
                                     <td className="  border-r-4 border-gray-400">

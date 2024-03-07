@@ -1,0 +1,26 @@
+<div className="grid max-md:grid-cols-2  max-lg:grid-cols-3 max-xl:grid-cols-4 grid-cols-5 gap-1  p-1 ">
+                {[...Array(15)].map((val, ind) => (
+                    <CardInfo1_v1
+                        key={ind}
+                        info={{
+                            h1: car1.name,
+                            pre: "J",
+                            h2: car1.idjob,
+                            h3: (car1.make || "") + " " + (car1.model || ""),
+                            h4: car1.finished,
+                        }}
+                        fmid={
+                            <CardPlateNo_v1
+                            fontSize="60px"
+                                plate={{
+                                    ...car1,
+                                    code: ind + 1,
+                                    region: ind + 1,
+                                }}
+                            />
+                        }
+                        imgProp={{link:`/file/image/cars/${car1.make}/${car1.model}.webp`}}
+                        fleft={<BoxColor_v1 color="blue"/>}
+                    />
+                ))}
+            </div>

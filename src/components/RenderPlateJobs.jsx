@@ -27,6 +27,7 @@ export default function RenderPlateJobs({
     },
     datein="2"
 }) {
+    const className = "pt-1   max-h-[80%] max-w-[90%]    object-contain absolute-center mt-2";
     plateobj = plateobj || {
         idcar: 0,
         idclient: 0,
@@ -72,7 +73,7 @@ export default function RenderPlateJobs({
         );
     }
     function openCar() {
-        if (plateobj.idjob) navigate(`/nav/job/${plateobj.idjob}`);
+        if (plateobj.idjob) navigate(`/nav/jobs/edit/${plateobj.idjob}`);
     }
     // defualt return
     return (
@@ -88,7 +89,15 @@ export default function RenderPlateJobs({
             </div>
             <div className="caridmodel  w-48   leading-5 pl-1 pb-1    h-28 overflow-hidden    relative">
                 <img
-                    className="h-[120%] pt-1  w-48   absolute  object-cover  "
+                    onError={(e)=>{
+                        if(e.currentTarget.src.includes("carlogos")){
+                        e.currentTarget.className=" hidden  ";
+                        return;}
+                        e.currentTarget.className=className;
+                        e.currentTarget.src = `${baseurl2}/files/image/carlogos/${plateobj?.make?.trimEnd()}-logo.png`;
+                        
+                    }}
+                    className="h-[120%] pt-1  w-48   absolute  object-contain  "
                     src={`${baseurl2}/files/image/cars/${plateobj.make}/${plateobj.model}.webp`}
                     alt=""
                 />

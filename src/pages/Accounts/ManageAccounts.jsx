@@ -1,24 +1,27 @@
 import React, { useContext, useState } from "react";
 import BasicForm from "../../components/form/BasicForm";
-import InputContainer from "./../../components/input/InputContainer";
+import InputContainer from "../../components/input/InputContainer";
 import AdvancedForm from "../../components/form/AdvancedForm";
 import xaxios from "../../utils/xaxios";
-import TableWithUrl from "./../../components/tables/TableWithUrl";
+import TableWithUrl from "../../components/tables/TableWithUrl";
 import { LoadingState } from "../../context/LoadingContext";
-import OverFlowAuto from "./../../components/OverFlowAuto";
+import OverFlowAuto from "../../components/OverFlowAuto";
 import { GlobalState } from "../../context/GlobalContext";
 import BasicDialog from "../../components/dialog/BasicDialog";
 import { openCloseModal } from "../../utils/userInterface";
+import { useParams } from "react-router-dom";
 
-export default function NewAccountRegistration() {
+export default function ManageAccounts() {
+    let {role} = useParams();
+    role = role  || "all";
     const { load, setLoad } = useContext(LoadingState);
-    const roles = ["agent", "employee"];
+    const roles = ["agent", "employee","company"];
     const [refetchState, setRefetchState] = useState(0);
     const fields = [
         { title: "idaccount", required: false, readOnly: true, type: "number" },
         { title: "name", required: true, type: "text" },
         { title: "role", required: false, type: "select", options: roles },
-        { title: "phone", required: false, type: "text" },
+        { title: "phone", required: false, type: "text",pattern:"[0-9]{9}" },
         { title: "percent", required: true, type: "number" },
         { title: "proffession", required: false, type: "text" },
         { title: "salary", required: false, type: "number" },
@@ -43,7 +46,7 @@ export default function NewAccountRegistration() {
         setRefetchState(Date.now());
     }
     return (
-        <div className=" bg-white gap-1 p-2 grid w-fit max-w-[24cm] mx-auto ">
+        <main className=" bg-white gap-1 p-2 grid w-fit max-w-[24cm] mx-auto ">
             <BasicDialog id="new account form">
                 <center>
                     <h3>New Account Registration</h3>
@@ -70,10 +73,10 @@ export default function NewAccountRegistration() {
                 <TableWithUrl
                     key={refetchState}
                     rowObjectUP={editAccount}
-                    url={"/api/getlist/accounts"}
+                    url={`/api/getlist/accounts/${role}`}
                 />
             </OverFlowAuto>
-        </div>
+        </main>
     );
     function onSubmit(datain) {
         xaxios

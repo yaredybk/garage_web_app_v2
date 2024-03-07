@@ -1,0 +1,150 @@
+{
+    "/": [
+        {
+            "name": "Daniel Garage main",
+            "link": "/nav/jobs",
+            "img": "/public/logo/daniel_garage_logo_wide_border-removebg-preview.png"
+        },
+        {
+            "name": "report",
+            "link": "/nav/report/today",
+            "img": "/public/images/report.png"
+        },
+        {
+            "name": "inspections",
+            "link": "/nav/inspections",
+            "img": "/public/images/Inspection.png"
+        },
+        {
+            "name": "registration",
+            "link": "/nav/register",
+            "img": "/public/images/add-rect.svg"
+        },
+        {
+            "name": "loans",
+            "link": "/nav/loans",
+            "img": "/public/images/unpaid.png"
+        },
+        {
+            "name": "accounts",
+            "link": "/nav/accounts",
+            "img": "/public/images/transaction.png"
+        },
+        {
+            "name": "search",
+            "link": "/nav/search",
+            "img": "/public/images/search.svg"
+        },
+        {
+            "name": "cars",
+            "link": "/nav/cars",
+            "img": "/public/images/cars.png"
+        },
+        {
+            "name": "clients",
+            "link": "/nav/clients",
+            "img": "/public/images/clients.png"
+        },
+        {
+            "name": "stock",
+            "link": "/nav/stock",
+            "img": "/public/images/stock.png"
+        },
+        {
+            "name": "more",
+            "link": "/nav/more",
+            "img": "/public/images/more.svg"
+        }
+    ],
+    "/register": [
+        {
+            "name": "Car",
+            "link": "/nav/register/car",
+            "img": "/public/images/caricon.svg"
+        },
+        {
+            "name": "Client",
+            "link": "/nav/register/client",
+            "img": "/public/images/person2.png"
+        },
+        {
+            "name": "stock",
+            "link": "/nav/register/stock",
+            "img": "/public/images/stock.png"
+        },
+        {
+            "name": "accounts",
+            "link": "/nav/register/accounts",
+            "img": "/public/images/transaction.png"
+        }
+    ],
+    "/accounts": [
+        {
+            "name": "internal",
+            "link": "/nav/accounts/internal",
+            "img": "/public/logo/daniel_garage_logo_wide_border-removebg-preview.png"
+        },
+        {
+            "name": "employee",
+            "link": "/nav/accounts/employee",
+            "img": "/public/images/technician.png"
+        },
+        {
+            "name": "agent",
+            "link": "/nav/accounts/agent",
+            "img": "/public/images/agent.png"
+        },
+        {
+            "name": "company",
+            "link": "/nav/accounts/company",
+            "img": "/public/images/company.png"
+        }
+    ],
+    "/search": [
+        {
+            "name": "cars",
+            "link": "/nav/search/cars",
+            "img": "/public/images/caricon.svg"
+        },
+        {
+            "name": "clients",
+            "link": "/nav/search/clients",
+            "img": "/public/images/person2.png"
+        }
+    ],
+    "/more": [
+        {
+            "link": "/nav/transaction/new",
+            "name": "Transact",
+            "img": "/public/images/transaction.png"
+        },
+        {
+            "link": "/nav/notification/list",
+            "name": "Notification",
+            "img": "/public/images/notification.svg"
+        },
+        {
+            "link": "/nav/accounts/history",
+            "name": "Transaction history",
+            "img": "/public/images/history.svg"
+        },
+        {
+            "link": "/nav/advancedsearch",
+            "name": "Search",
+            "img": "/public/images/search.svg"
+        },
+        {
+            "link": "/nav/appt",
+            "name": "Appointments"
+        },
+        {
+            "link": "/nav/check-in/modifypoints/sedan",
+            "name": "Edit car image points"
+        },
+        {
+            "link": "/nav/login",
+            "name": "Login Page",
+            "img": "/public/images/log-in.svg"
+        }
+    ]
+}

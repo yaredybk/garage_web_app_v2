@@ -12,12 +12,14 @@ import BasicTable from "./BasicTable";
  */
 export default function TableWithSubtotal({
     data,
+    nodatamessage="No data",
     onRowClickIndex = undefined,
     rowObjectUP = ()=>null,
     colIndex = 0,
     color = " bgblue ",
     indexClicked = null,
     subtotalColName = undefined,
+    colsin=[]
 }) {
     const [subtotal, setsubtotal] = useState(undefined);
     useEffect(() => {
@@ -30,7 +32,7 @@ export default function TableWithSubtotal({
         setsubtotal(net);
     }, [data]);
     return (
-        <div className=" grid gap-0  bg-white outline outline-1 outline-gray-400 ">
+        <div className=" grid gap-0    ">
             <BasicTable
                 data={data}
                 onRowClickIndex={onRowClickIndex}
@@ -38,6 +40,8 @@ export default function TableWithSubtotal({
                 colIndex={colIndex}
                 color={color}
                 indexClicked={indexClicked}
+                colsin = {colsin}
+                nodatamessage={nodatamessage}
             />
             {subtotalColName && data?.length != 0 && (
                 <div className="flex    ">

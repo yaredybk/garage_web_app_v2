@@ -35,7 +35,8 @@ export default function NewPaymentForm({
     setpopwindow = () => null,
 }) {
     const { list1, refetchData } = useEffectStateArrayData(
-        "/api/getlist/jobtransaction/" + id + "?fromjob=true"
+        "/api/getlist/jobtransaction/" + id + "?fromjob=true",
+        []
     );
     const { list_accounts } = useContext(GlobalState);
     const { load, setLoad } = useContext(LoadingState);
@@ -58,6 +59,7 @@ export default function NewPaymentForm({
         amountgarage: "",
         amountorigin: totalunpaid,
         enablesharing: true,
+        completejob: true,
     });
     let sampleData = [
         "idaccount",
@@ -69,18 +71,22 @@ export default function NewPaymentForm({
         "idjob",
     ];
     useEffect(() => {
-        if (list1) manageSharing(totalunpaid);
+        if (list1 && Array.isArray(list1) && list1.length)
+            manageSharing(totalunpaid);
     }, [list1]);
 
     function manageSharing(amountin, keyToBefirst = null) {
-        let accounts = sharingOrder.accounts
-            ? sharingOrder.accounts
-            : extractBalanceSubnetByIdaccount(list1);
+        //  console.log(":",list1);
+        let accounts = {};
+        if (sharingOrder.accounts) accounts = sharingOrder.accounts;
+        else accounts = extractBalanceSubnetByIdaccount(list1);
+        // console.log("shared acc:", accounts);
         let newshareorder = shareBalanceToAccounts(
             accounts,
             amountin,
             keyToBefirst
         );
+        // console.log("new sharing:", newshareorder);
         setSharingOrder({ ...newshareorder });
     }
     return (
@@ -90,7 +96,8 @@ export default function NewPaymentForm({
             key={newTransactionData.category}
             onSubmit={sendTransactionData}
         >
-            <InputContainer title="Net amount" htmlFor="amount">
+            <div className=" grid grid-cols-2 gap-2">
+                <LabelLeft htmlFor="amount">Net amount</LabelLeft>
                 <input
                     required={newTransactionData?.category != "note"}
                     type="number"
@@ -104,71 +111,63 @@ export default function NewPaymentForm({
                         sendToPercentCalculator(e);
                     }}
                 />
-            </InputContainer>
-            <table>
-                <tbody>
-                    {sharingOrder.accounts &&
-                        Object.keys(sharingOrder.accounts).map((key, ind) => (
-                            <tr
-                                key={key}
-                                onClick={() => {
-                                    manageSharing(
-                                        newTransactionData.amount,
-                                        key
-                                    );
-                                }}
-                                className=" bg-red-100 "
-                            >
-                                <td>{key} </td>
-                                <td className=" bg-blue-100 text-right px-1">
-                                    {sharingOrder.accounts[key]?.name}
-                                </td>
-                                <td className=" bg-red-100">
-                                    {sharingOrder.accounts[key]?.subtotal}
-                                </td>
-                                <td className=" bg-blue-100">
-                                    {sharingOrder.accounts[key]?.shared}
-                                </td>
-                            </tr>
-                        ))}
-                </tbody>
-            </table>
+            </div>
+            <div className=" grid grid-cols-[auto,auto] gap-2">
+                <LabelLeft htmlFor="amount">...</LabelLeft>
+                <table>
+                    <tbody>
+                        {sharingOrder.accounts &&
+                            Object.keys(sharingOrder.accounts).map(
+                                (key, ind) => (
+                                    <tr
+                                        key={key}
+                                        onClick={() => {
+                                            manageSharing(
+                                                newTransactionData.amount,
+                                                key
+                                            );
+                                        }}
+                                        className=" bg-red-100 "
+                                    >
+                                        <td>{key} </td>
+                                        <td className=" bg-blue-100 text-right px-1">
+                                            {sharingOrder.accounts[key]?.name}
+                                        </td>
+                                        <td className=" bg-red-100">
+                                            {
+                                                sharingOrder.accounts[key]
+                                                    ?.subtotal
+                                            }
+                                        </td>
+                                        <td className=" bg-blue-100">
+                                            {sharingOrder.accounts[key]?.shared}
+                                        </td>
+                                    </tr>
+                                )
+                            )}
+                    </tbody>
+                </table>
+            </div>
             <div
                 className={
-                    accountgroup
-                        ? "account_category grid grid-cols-4 gap-2 p-1 "
-                        : "account_category grid grid-cols-4 gap-2 p-1 animate-ping-1"
+                    newTransactionData.method
+                        ? " hidden "
+                        : " grid grid-cols-5 gap-2 py-1 animate-ping-1"
                 }
             >
-                {["internal", "agent", "employee"].map((type, ind) => (
+                <LabelLeft>via</LabelLeft>
+                {["cash", "transfer", "loan"].map((type, ind) => (
                     <button
                         key={type}
                         onClick={() => {
-                            setaccountgroup(type);
-                            if (type == "client") {
-                                let cll = list_accounts.find(
-                                    (obj) => obj.role == "client"
-                                );
-                                setNewTransactionData({
-                                    ...newTransactionData,
-                                    idaccount: cll?.idaccount,
-                                    amount: 0,
-                                });
-                                document.getElementById("description").focus();
-                            } else {
-                                if (newTransactionData.reason != "fromjob")
-                                    setNewTransactionData({
-                                        ...newTransactionData,
-                                        idaccount: "",
-                                        amount: "",
-                                    });
-                                else
-                                    setNewTransactionData({
-                                        ...newTransactionData,
-                                        idaccount: "",
-                                    });
-                                document.getElementById("description").focus();
-                            }
+                            let idaccount =
+                                type == "cash" ? 4 : type == "loan" ? 19 : 1;
+                            setaccountgroup("internal");
+                            setNewTransactionData({
+                                ...newTransactionData,
+                                idaccount,
+                                method: type,
+                            });
                         }}
                         type="button"
                         className={
@@ -181,103 +180,172 @@ export default function NewPaymentForm({
                     </button>
                 ))}
             </div>
-            {accountgroup && (
-                <div className="flex gap-1 items-center">
-                    <InputContainer title={"Select ACC"} htmlFor="idaccount">
-                        <select
-                            name="idaccount"
-                            required
-                            id="idaccount"
-                            value={
-                                newTransactionData.idaccount
-                                    ? newTransactionData.idaccount
-                                    : 0
-                            }
-                            onChange={(e) => {
-                                newTransactionData?.reason == "fromjob" &&
-                                    manageSharing(newTransactionData.amount);
-                                setNewTransactionData({
-                                    ...newTransactionData,
-                                    idaccount: e.target.value,
-                                });
-                            }}
-                        >
-                            <option value={""}>- - -</option>
-                            {list_accounts?.map(
-                                (obj, ind) =>
-                                    obj?.role == accountgroup && (
-                                        <option
-                                            key={ind}
-                                            value={obj?.idaccount}
-                                        >
-                                            {obj?.name}
-                                        </option>
-                                    )
-                            )}
-                        </select>
-                    </InputContainer>
-                    <InputContainer htmlFor="method">
-                        <select
-                            required
-                            type="number"
-                            name="method"
-                            id="method"
-                            value={newTransactionData.method}
-                            onChange={(e) => {
-                                setNewTransactionData({
-                                    ...newTransactionData,
-                                    method: e.target.value,
-                                });
-                            }}
-                        >
-                            {["", "cash", "transfer", "check"].map(
-                                (val, ind) => (
-                                    <option value={val} key={val + ind}>
-                                        {val}
-                                    </option>
-                                )
-                            )}
-                        </select>
-                    </InputContainer>
-                    <InputContainer htmlFor="amountorigin">
-                        <input
-                            required
-                            autoComplete="off"
-                            value={newTransactionData?.amountorigin}
-                            className=" w-20"
-                            type="number"
-                            name="amountorigin"
-                            id="amountorigin"
-                            // readOnly
-                            min={1}
-                            onChange={() => null}
-                        />
-                    </InputContainer>
+            <div className="account_category grid grid-cols-[auto,auto] gap-2 py-1 ">
+                <LabelLeft>Paid to</LabelLeft>
+                <div className="grid gap-2">
+                    <div className="flex gap-2">
+                        {["internal", "agent", "employee", "company"].map(
+                            (type, ind) => (
+                                <button
+                                    key={type}
+                                    onClick={() => {
+                                        setaccountgroup(type);
+                                        if (type == "client") {
+                                            let cll = list_accounts.find(
+                                                (obj) => obj.role == "client"
+                                            );
+                                            setNewTransactionData({
+                                                ...newTransactionData,
+                                                idaccount: cll?.idaccount,
+                                                amount: 0,
+                                            });
+                                            document
+                                                .getElementById("description")
+                                                .focus();
+                                        } else {
+                                            if (
+                                                newTransactionData.reason !=
+                                                "fromjob"
+                                            )
+                                                setNewTransactionData({
+                                                    ...newTransactionData,
+                                                    idaccount: "",
+                                                    amount: "",
+                                                });
+                                            else
+                                                setNewTransactionData({
+                                                    ...newTransactionData,
+                                                    idaccount: "",
+                                                });
+                                            document
+                                                .getElementById("description")
+                                                .focus();
+                                        }
+                                    }}
+                                    type="button"
+                                    className={
+                                        accountgroup == type
+                                            ? "bg-green-300 p-1"
+                                            : "bg-gray-300 p-1"
+                                    }
+                                >
+                                    {type}
+                                </button>
+                            )
+                        )}
+                    </div>
 
-                    <button
-                        type="button"
-                        className="p-1"
-                        onClick={addSharedAccount}
-                    >
-                        <img
-                            src="/public/images/add.svg"
-                            alt="+"
-                            className=" w-8"
-                        />
-                    </button>
+                    {accountgroup && (
+                        <div className="flex gap-1 items-center">
+                            <InputContainer title="Account" htmlFor="idaccount">
+                                <select
+                                    name="idaccount"
+                                    required
+                                    id="idaccount"
+                                    value={
+                                        newTransactionData.idaccount
+                                            ? newTransactionData.idaccount
+                                            : 0
+                                    }
+                                    onChange={(e) => {
+                                        newTransactionData?.reason ==
+                                            "fromjob" &&
+                                            manageSharing(
+                                                newTransactionData.amount
+                                            );
+                                        setNewTransactionData({
+                                            ...newTransactionData,
+                                            idaccount: e.target.value,
+                                        });
+                                    }}
+                                >
+                                    <option value={""}>- - -</option>
+                                    {list_accounts?.map(
+                                        (obj, ind) =>
+                                            obj?.role == accountgroup && (
+                                                <option
+                                                    key={ind}
+                                                    value={obj?.idaccount}
+                                                >
+                                                    {obj?.name}
+                                                </option>
+                                            )
+                                    )}
+                                </select>
+                            </InputContainer>
+                            <InputContainer htmlFor="Method">
+                                <select
+                                    required
+                                    type="number"
+                                    name="method"
+                                    id="method"
+                                    value={newTransactionData.method}
+                                    onChange={(e) => {
+                                        setNewTransactionData({
+                                            ...newTransactionData,
+                                            method: e.target.value,
+                                        });
+                                    }}
+                                >
+                                    {[
+                                        "",
+                                        "cash",
+                                        "transfer",
+                                        "check",
+                                        "loan",
+                                    ].map((val, ind) => (
+                                        <option value={val} key={val + ind}>
+                                            {val}
+                                        </option>
+                                    ))}
+                                </select>
+                            </InputContainer>
+                            <InputContainer
+                                title="Amount"
+                                htmlFor="amountorigin"
+                            >
+                                <input
+                                    required
+                                    autoComplete="off"
+                                    value={newTransactionData?.amountorigin}
+                                    className=" w-20"
+                                    type="number"
+                                    name="amountorigin"
+                                    id="amountorigin"
+                                    // readOnly
+                                    min={1}
+                                    onChange={() => null}
+                                />
+                            </InputContainer>
+
+                            <button
+                                type="button"
+                                className="p-1"
+                                onClick={addSharedAccount}
+                            >
+                                <img
+                                    src="/public/images/add.svg"
+                                    alt="+"
+                                    className=" w-8"
+                                />
+                            </button>
+                        </div>
+                    )}
+                {fromJobSharedAccounts.map((obj, ind) => (
+                    <FromJobSharedAccountMember
+                        list_accounts={list_accounts}
+                        key={ind}
+                        index={ind}
+                        datain={obj}
+                        onChange={manageSharingChangeFromJob}
+                    />
+                ))}
                 </div>
-            )}
-            {fromJobSharedAccounts.map((obj, ind) => (
-                <FromJobSharedAccountMember
-                    list_accounts={list_accounts}
-                    key={ind}
-                    index={ind}
-                    datain={obj}
-                    onChange={manageSharingChangeFromJob}
-                />
-            ))}
+            </div>
             {newTransactionData.idaccount && (
                 <>
+                <div className="account_category grid grid-cols-[auto,auto] gap-2 py-1 ">
+                <LabelLeft >description</LabelLeft>
                     <InputContainer htmlFor="description_payment">
                         <input
                             required
@@ -292,19 +360,21 @@ export default function NewPaymentForm({
                             id="description_payment"
                         ></input>
                     </InputContainer>
+                </div>
                     <span
                         className={
                             newTransactionData.completejob
-                                ? " mx-auto  px-2  outline outline-1 outline-blue-800 rounded-sm"
-                                : " mx-auto bg-blue-300 px-2 animate-ping-1 outline outline-1 outline-blue-800 rounded-sm"
+                                ? " mx-auto  bg-green-300 px-2  outline outline-1 outline-blue-800 rounded-sm  animate-ping-1"
+                                : " mx-auto bg-blue-300 px-2 outline outline-1 outline-blue-800 rounded-sm"
                         }
                     >
                         <input
                             type="checkbox"
                             name="endjob"
                             id="endjob"
-                            value={newTransactionData?.completejob}
+                            checked={newTransactionData?.completejob}
                             onChange={(e) => {
+                                console.log(e.target.checked);
                                 setNewTransactionData({
                                     ...newTransactionData,
                                     completejob: e.target.checked,
@@ -464,6 +534,19 @@ export default function NewPaymentForm({
                 setLoad(false);
             });
     }
+}
+function LabelLeft({ children, className = "", ...props }) {
+    return (
+        <label
+            {...props}
+            className={
+                " bg-gray-600 text-white -300 w-20 p-1 text-center -ml-3 c" +
+                className
+            }
+        >
+            {children}
+        </label>
+    );
 }
 function FromJobSharedAccountMember({
     datain,

@@ -1,0 +1,67 @@
+
+    function SelectAccountCategory() {
+        return (
+            <div className="account_category flex items-stretch  gap-2  p-1">
+                <input
+                    name="enablesharing"
+                    defaultChecked
+                    onChange={(e) => {
+                        let val = e.target.checked;
+                        // console.log(val);
+                        let amount = newTransactionData.amount;
+                        if (!(newTransactionData.enablegarage && val)) {
+                            amount = 0;
+                        }
+                        setNewTransactionData({
+                            ...newTransactionData,
+                            enablesharing: val,
+                            amount,
+                        });
+                    }}
+                    type="checkbox"
+                    id="enablesharing"
+                />
+                {["agent", "employee"].map((type, ind) => (
+                    <button
+                        key={type}
+                        onClick={() => {
+                            setaccountgroup(type);
+                            setNewTransactionData({
+                                ...newTransactionData,
+                                percent: 0,
+                                amountshared: 0,
+                                amountgarage: newTransactionData.amount,
+                                idaccountshared: "",
+                                accountInfoShared: null,
+                            });
+                        }}
+                        type="button"
+                        className={
+                            accountgroup == type
+                                ? "bg-green-300 flex-1 p-1 pb-2 border-solid border-2  "
+                                : "bg-gray-300 flex-1 p-1 pb-2  border-solid border-2 border-gray-400 "
+                        }
+                    >
+                        {type}
+                    </button>
+                ))}
+                <button
+                    onClick={() => {
+                        setManualEdit(!manualEdit);
+                    }}
+                    className={
+                        manualEdit
+                            ? " border-2 h-full py-0 px-1 border-solid border-gray-600 bg-red-400 animate-ping-1"
+                            : " border-2 h-full py-0 px-1 border-solid border-gray-300 "
+                    }
+                    type="button"
+                >
+                    <img
+                        className="   h-7"
+                        src="/public/images/edit.svg"
+                        alt="edit"
+                    />
+                </button>
+            </div>
+        );
+    }

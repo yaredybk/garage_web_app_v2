@@ -42,7 +42,9 @@
             "Door",
             "Roof",
             "Bumber",
-            "Fender"
+            "Fender",
+            "wind shield",
+            "side mirrors"
         ]
     },
     {
@@ -53,7 +55,7 @@
         "subsystems": ["Frame", "Body", "Suspension", "Wheels", "Tires"]
     },
     {
-        "enabled":true,
+        "enabled":false,
         "system": "Electrical System",
         "description": "Provides electrical power to various components, maintains voltage levels, starts the engine, and distributes power through wiring and protection devices.",
         "units":["%"],
@@ -61,6 +63,8 @@
             "Battery",
             "Alternator",
             "Starter",
+            "power window",
+            "Centeral Lock",
             "Wiring Harness",
             "Fuses",
             "Relays",
@@ -97,7 +101,7 @@
         ]
     },
     {
-        "enabled":true,
+        "enabled":false,
         "system": "Steering System",
         "description": "Allows the driver to control the direction of the car by turning the wheels through a mechanical linkage system.",
         "units":["%"],
@@ -138,7 +142,7 @@
         ]
     },
     {
-        "enabled":true,
+        "enabled":false,
         "system": "Safety Systems",
         "description": "Protects occupants in case of accidents through various passive and active systems like airbags, restraining devices, collision absorption structures, and electronic driving assistance features.",
         "units":["%"],

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
     advanced_search_1,
     searchForOptions,
@@ -15,23 +15,26 @@ import RenderClient from "../../features/clients/RenderClient.jsx";
 import { GlobalState } from "../../context/GlobalContext.jsx";
 import { LoadingState } from "./../../context/LoadingContext";
 import { openCloseModal } from "../../utils/userInterface.js";
+import IconSmall from "../../components/IconSmall.jsx";
 
 export default function AdvancedSearch({}) {
-    const [infoo, setInfo] = useState({ clientId: null, idcar: null });
-    function openModal(id, modalid) {
+    const { typein } = useParams();
+    const [infoo, setInfo] = useState({
+        clientId: null,
+        idcar: null,
+        client: {},
+        car: {},
+    });
+    function openModaltmp(id, modalid, datain) {
         if (!(id || modalid)) return;
         let idd = modalid ? modalid : "clientwindow";
-        if (modalid == "carwindow") setInfo({ ...infoo, idcar: id });
-        else setInfo({ ...infoo, clientId: id });
-        setShowWindow(idd);
+        if (modalid == "carwindow") setInfo({ ...infoo, idcar: id, ...datain });
+        else setInfo({ ...infoo, clientId: id, ...datain });
         openCloseModal(idd, "open");
     }
     const { list_region, list_carmake } = useContext(GlobalState);
     const { load } = useContext(LoadingState);
-    // console.log(downPreset);
     const navigate = useNavigate();
-    // const searchForOptions = ["cars", "owners", "jobs"];
-    // const usingOptions = [["car_id", "plate_no","owner_id"], ["owner_id", "phone_no","owner_name"], ["job_id","car_id",]];
     const whereCols = {
         0: {
             // car_id:0,
@@ -44,8 +47,18 @@ export default function AdvancedSearch({}) {
             //     { id: -1, code: "all", desc: "all" },
             //     ...downPreset?.plateCodes,
             // ],
-            region: [{ idregion: -1, en: "all" }, ...list_region],
-            // make: [{ id: -1, code: "all" },],
+            region: [
+                { val: "all" },
+                ...list_region?.map((obj) => {
+                    return { val: obj?.en };
+                }),
+            ],
+            make: [
+                { val: "all" },
+                ...list_carmake?.map((obj) => {
+                    return { val: obj.make };
+                }),
+            ],
             // model: [{ id: -1, code: "all" }],
             // car_type: [{ id: -1, code: "all" }],
             // plate_no:0,
@@ -84,28 +97,21 @@ export default function AdvancedSearch({}) {
         },
     };
     const [searchParams, setSearchParams] = useState({
-        searchfor: "0",
+        searchfor: searchForOptions.findIndex((val) => val == typein) || "0",
+        // searchfor:"0",
         searchValue: "",
         using: "0",
         where: {},
     });
-    const [showWindow, setShowWindow] = useState(0);
     const [list, setlist] = useState(null);
     const [waiting, setwaiting] = useState(0);
     const [changed, setchanged] = useState(true);
-    // let waiting = false;
-    // let changed;
     async function advanced_search() {
-        // console.log(searchParams);
         advanced_search_1({ ...searchParams })
-            .then((data) => {
-                setlist([...data]);
-                // console.log(data);
-            })
+            .then(setlist)
             .catch((err) => {
                 console.warn(err);
             });
-        // console.log(await result);
         // setlist(result);
         setchanged(false);
         if (waiting)
@@ -126,18 +132,17 @@ export default function AdvancedSearch({}) {
     }
     useEffect(() => {
         if (waiting)
-            if (searchParams?.searchValue != "") {
-                if (changed || waiting === 1) advanced_search();
-                else if (waiting !== 0) setwaiting(0);
-            } else {
-                setwaiting(0);
-            }
-
-        return () => {};
+            if (changed || waiting === 1)
+                // if (searchParams?.searchValue != "") {
+                advanced_search();
+            else if (waiting !== 0) setwaiting(0);
+        // } else {
+        // setwaiting(0);
+        // }
     }, [waiting]);
     function render_using() {
         return searchParams?.searchfor ? (
-            <div className="pt-2 grid border-black bg-white border-t-4">
+            <div className="pt-2 grid border-black  border-t-4">
                 <label
                     className="block text-center font-bold text-xl "
                     htmlFor="searchfor"
@@ -152,12 +157,13 @@ export default function AdvancedSearch({}) {
                             using: e.target.value,
                             searchValue: "",
                         });
+                        focusSearch();
                     }}
                     className=" py-1 px-2 bg-blue-200 rounded-md "
                     name="using"
                     id="using"
                 >
-                    {usingOptions[searchParams?.searchfor].map((val, ind) => (
+                    {usingOptions[searchParams?.searchfor]?.map((val, ind) => (
                         <option key={val + ind} value={ind}>
                             {val}
                         </option>
@@ -168,14 +174,14 @@ export default function AdvancedSearch({}) {
     }
     function render_where() {
         return searchParams?.searchfor ? (
-            <div className="pt-2 grid border-black bg-slate-200 border-t-4">
+            <div className="pt-2 grid border-black bg-slate-400 border-t-4">
                 <span
                     className="block text-center font-bold text-xl "
                     htmlFor="searchfor"
                 >
                     Where
                 </span>
-                {Object.keys(whereCols[searchParams?.searchfor]).map(
+                {Object.keys(whereCols[searchParams?.searchfor] || {})?.map(
                     (key, ind) => (
                         <div
                             key={key}
@@ -188,16 +194,15 @@ export default function AdvancedSearch({}) {
                                 {key}
                             </label>
                             <select
-                                // value={searchParams?.using}
                                 onChange={(e) => {
-                                    if (e.target.value == -1) {
+                                    let { name, value } = e.target;
+                                    if (value == -1 || value == "all") {
                                         let tmp1 = {};
-                                        let tmp2 = {};
                                         tmp1 = searchParams?.where;
-                                        delete tmp1[e.target.name];
+                                        delete tmp1[name];
                                         setSearchParams({
                                             ...searchParams,
-                                            where: { ...tmp2 },
+                                            where: { ...tmp1 },
                                         });
                                         setchanged(true);
                                         throttle();
@@ -206,31 +211,29 @@ export default function AdvancedSearch({}) {
                                             ...searchParams,
                                             where: {
                                                 ...searchParams?.where,
-                                                [key]: e.target.value,
+                                                [name]: value,
                                             },
                                         });
+                                        setchanged(true);
+                                        throttle();
                                     }
-                                    // console.log(searchParams?.where);
+                                    focusSearch();
                                 }}
                                 className=" py-1 px-2 bg-blue-200 rounded-md "
                                 name={key}
                                 id={key}
                             >
-                                {whereCols[searchParams?.searchfor][key].map(
+                                {whereCols[searchParams?.searchfor][key]?.map(
                                     (obj, ind) => (
                                         <option
                                             key={
-                                                obj?.en
-                                                    ? obj?.en + ind
-                                                    : obj?.name + ind
+                                                key +
+                                                searchParams?.searchfor +
+                                                ind
                                             }
-                                            value={
-                                                obj?.id
-                                                    ? obj?.id
-                                                    : obj?.idregion
-                                            }
+                                            value={obj?.val}
                                         >
-                                            {obj?.en ? obj?.en : obj?.name}
+                                            {obj?.val}
                                         </option>
                                     )
                                 )}
@@ -241,58 +244,128 @@ export default function AdvancedSearch({}) {
             </div>
         ) : null;
     }
-    function rowClick(rowObject, uselessdata, objj = null) {
-        console.log(rowObject, uselessdata, objj);
+    function rowClick(rowObject) {
+        // console.log(rowObject, uselessdata, objj);
         // if (!objj) return;
-        switch (searchParams?.searchfor) {
-            case "0":
-                openModal(rowObject.idcar, "carwindow");
-                // setInfo({...infoo,idcar:rowObject.idcar})
-                // navigate("/advancedsearch?carid=" + objj?.car_id);
-                // openCloseModal("car");
-
-                break;
-            case "1":
-                openModal(rowObject.idclient, "clientwindow");
-                // setInfo({...infoo,clientId:rowObject.idcar})
-                // navigate("/advancedsearch?ownerid=" + objj?.owner_id);
-                // openCloseModal("owner");
-                break;
-            case "2":
-                // navigate("/advancedsearch");
-                // openCloseModal(objj?.job_id);
-                break;
-
-            default:
-                break;
+        if (searchParams?.searchfor == 0) {
+            openModaltmp(rowObject.idcar, "carwindow", { car: rowObject });
+        }
+        if (searchParams?.searchfor == 1) {
+            openModaltmp(rowObject.idclient, "clientwindow", {
+                client: rowObject,
+            });
         }
     }
-    // function openCloseModal(state) {
-    //     if (state) {
-    //         // navigate("?carid=" + state);
-    //         setShowWindow(state);
-    //         document.getElementById("tempModal").showModal();
-    //         return;
-    //     }
-    //     setShowWindow(0);
-    //     document.getElementById("tempModal").close();
-    //     navigate("/advancedsearch");
-    // }
+    const [hidesidemenu, sethidesidemenu] = useState(null);
+    function focusSearch() {
+        document.getElementById("searchValue")?.focus();
+    }
     return (
-        <div className=" advancedsearch max-md:absolute inset-0 z-50 bg-slate-100  ">
+        <main className=" advancedsearch max-md:absolute inset-0 z-50 bg-slate-100 dark:bg-gray-800  ">
+            <div className="search-box  flex gap-1 z-50   sticky top-0 ">
+                <div className="hidden max-md:block">
+                    <button
+                        onClick={() => sethidesidemenu(!hidesidemenu)}
+                        className="bg-blue-400    "
+                    >
+                        <IconSmall
+                            style={{
+                                transform: hidesidemenu
+                                    ? "rotate(270deg)"
+                                    : "rotate(90deg)",
+                            }}
+                            src="/public/images/arrowdobledown.svg"
+                        />
+                    </button>
+                </div>
+                <div className="m-1 relative bg-blue-800 gap-1  flex  items-center  mx-auto  rounded-full  ">
+                    <img
+                        onClick={focusSearch}
+                        className=" h-7 -mr-8 opacity-40 p-1  "
+                        src="/public/images/search.svg"
+                        alt="search"
+                    />
+                    <input
+                        autoCapitalize="off"
+                        autoCorrect="off"
+                        autoFocus
+                        autoComplete="off"
+                        pattern="[A-Za-z0-9()_\-,. ]*"
+                        type="text"
+                        placeholder={`Search ${
+                            searchForOptions[searchParams?.searchfor]
+                        } here`}
+                        value={searchParams?.searchValue}
+                        onChange={(e) => {
+                            setSearchParams({
+                                ...searchParams,
+                                searchValue: e.target.value,
+                            });
+                            throttle();
+                            sethidesidemenu(true);
+                        }}
+                        className=" py-2 pl-8 pr-10 bg-green-100 dark:bg-gray-500 m-0 border w-80 max-md:w-60 max-sm:w-48 border-blue-800  rounded-full "
+                        name="searchValue"
+                        id="searchValue"
+                    />
+
+                    <IconSmall
+                        onClick={() => {
+                            throttle();
+                            focusSearch();
+                        }}
+                        className=" h-8   rounded-full bg-blue-800 m-0 p-1 "
+                        src="/public/images/arrowright.png"
+                    />
+                </div>
+                <button
+                    onClick={() => navigate("/")}
+                    className="bg-red-400   text-xl"
+                >
+                    <IconSmall src="/public/images/close.svg" />
+                </button>
+            </div>
+            <div className="flex bg gap-2 p-2 max-md:p-1  ">
+                {searchForOptions?.map((val, ind) => {
+                    return (
+                        <Link
+                            role="button"
+                            style={{ "--btn-active-bg": "blue" }}
+                            key={val}
+                            className={
+                                searchParams.searchfor == ind
+                                    ? "btn bg-blue-700 shadow-md shadow-blue-500 text-white  basis-16 flex-1  text-xl max-md:text-base  "
+                                    : "btn hover:bg-blue-700 hover:text-white hover:shadow-blue-500  basis-16 flex-1 text-xl max-md:text-base shadow-md shadow-gray-500"
+                            }
+                            onClick={() => {
+                                setSearchParams({
+                                    ...searchParams,
+                                    searchfor: `${ind}`,
+                                    where: {},
+                                    searchValue: "",
+                                });
+                                focusSearch();
+                            }}
+                            to={`/nav/search/${val}`}
+                            replace
+                        >
+                            {val}
+                        </Link>
+                    );
+                })}
+            </div>
             <div
                 style={{ gridTemplateColumns: "min-content auto" }}
                 className="search parametrs grid  grid-cols-2 gap-2 h-full"
             >
-                <div className=" border-r border-r-gray-500">
-                    <button
-                        onClick={() => navigate("/")}
-                        className="bg-red-400 w-full h-12 text-2xl"
-                    >
-                        EXIT
-                    </button>
-
-                    <div className="border">
+                <div
+                    className={
+                        hidesidemenu
+                            ? "max-md:w-2 overflow-x-hidden transition-all "
+                            : "transition-all border-r border-r-gray-500 "
+                    }
+                >
+                    <div className="border hidden">
                         <label
                             className="block text-center font-bold text-xl "
                             htmlFor="searchfor"
@@ -316,7 +389,7 @@ export default function AdvancedSearch({}) {
                             {/* <option value="" disabled>
                                 Select here
                             </option> */}
-                            {searchForOptions.map((val, ind) => (
+                            {searchForOptions?.map((val, ind) => (
                                 <option key={val + ind} value={ind}>
                                     {val}
                                 </option>
@@ -326,62 +399,12 @@ export default function AdvancedSearch({}) {
                     {render_using()}
                     {render_where()}
                 </div>
-                <div className=" max-h-screen overflow-auto">
-                    <div className="search-box z-50 grid  sticky top-0 ">
-                        <div className="m-1 relative  mx-auto  rounded-full  ">
-                            <div className="grid absolute top-0 left-0 -translate-y-1/2">
-                                <img
-                                    onClick={() =>
-                                        document
-                                            .getElementById("searchValue")
-                                            .focus()
-                                    }
-                                    className=" h-7 opacity-40 p-1  "
-                                    src="/public/images/search.svg"
-                                    alt="search"
-                                />
-                            </div>
-                            <input
-                                autoCapitalize="off"
-                                autoCorrect="off"
-                                autoFocus
-                                autoComplete="off"
-                                pattern="[A-Za-z0-9()_\-,. ]*"
-                                type="text"
-                                placeholder={`Search ${
-                                    searchForOptions[searchParams?.searchfor]
-                                } here`}
-                                value={searchParams?.searchValue}
-                                onChange={(e) => {
-                                    setSearchParams({
-                                        ...searchParams,
-                                        searchValue: e.target.value,
-                                    });
-                                    throttle();
-                                }}
-                                className=" py-2 pl-8 pr-10 bg-green-100 m-0 border w-80 max-md:w-60 border-blue-800  rounded-full "
-                                name="searchValue"
-                                id="searchValue"
-                            />
-                            <div className="grid absolute  right-[1px] place-y-center">
-                                <button
-                                    onClick={() => {
-                                        throttle();
-                                        document
-                                            .getElementById("searchValue")
-                                            .focus();
-                                    }}
-                                    className=" grid place-items-center rounded-full bg-blue-800 mr-[2px] font-bold text-white p-0   m-0 pr-0  right-0 w-7 h-7  "
-                                >
-                                    GO
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div className=" max-h-screen  overflow-auto">
                     <div className="search-result grid">
                         {list ? (
                             <div className=" overflow-auto">
                                 <BasicTable
+                                colsin = {["code","region","make","model","name","phoneno"]}
                                     rowObjectUP={rowClick}
                                     colIndex={0}
                                     data={list}
@@ -390,7 +413,7 @@ export default function AdvancedSearch({}) {
                         ) : load ? (
                             <div className="bg-blue-200 p-1">searching ...</div>
                         ) : (
-                            <div className="bg-red-200 p-1">
+                            <div className="bg-red-600 p-1">
                                 start typing to see results !
                             </div>
                         )}
@@ -400,6 +423,7 @@ export default function AdvancedSearch({}) {
                         <BasicDialog id="clientwindow">
                             {infoo.clientId && (
                                 <RenderClient
+                                    clientinfoin={infoo.client}
                                     clientid={infoo.clientId}
                                     key={infoo.clientId}
                                 />
@@ -408,25 +432,15 @@ export default function AdvancedSearch({}) {
                         <BasicDialog id="carwindow">
                             {infoo.idcar && (
                                 <RenderCar
+                                    carinfoin={infoo.car}
                                     key={infoo?.idcar}
                                     idcar={infoo?.idcar}
                                 />
                             )}
                         </BasicDialog>
-                        <FoldedSection title="recent clients">
-                            <RenderClients openClient={openModal} />
-                        </FoldedSection>
-                        <br />
-                        <FoldedSection title="recent cars">
-                            <RenderCars
-                                openCar={(id) => {
-                                    openModal(id, "carwindow");
-                                }}
-                            />
-                        </FoldedSection>
                     </>
                 </div>
             </div>
-        </div>
+        </main>
     );
 }

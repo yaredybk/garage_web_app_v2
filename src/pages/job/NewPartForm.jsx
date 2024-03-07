@@ -315,6 +315,7 @@ export default function NewPartForm({
                                         idaccount: cll?.idaccount,
                                         amount: 0,
                                         enablesharing: false,
+                                        unitprice: 0,
                                     });
                                     document
                                         .getElementById("description")
@@ -347,6 +348,8 @@ export default function NewPartForm({
         );
     }
     function percentCalculator(valuetype, value = 0, nostatechange = null) {
+        let tmp = newTransactionData;
+
         let { amount, amountgarage, amountorigin, percent, unitprice, items } =
             newTransactionData;
         // let amount = newTransactionData?.amount;
@@ -399,7 +402,15 @@ export default function NewPartForm({
                     // amountgarage = Math.round(
                     //     (amount * percent) / (percent + 100)
                     // );
-                    if (items) unitprice = amount / items;
+                    if (items) {
+                        amount = unitprice * items;
+                        amountorigin = Math.round(
+                            (amount * 100) / (percent + 100)
+                        );
+                        amountgarage = Math.round(
+                            (amount * percent) / (percent + 100)
+                        );
+                    }
                     break;
                 case "amount":
                     amount = value;
@@ -448,12 +459,12 @@ export default function NewPartForm({
 
         let obj = {
             ...newTransactionData,
-            amount: amount ? amount : "",
-            amountgarage: amountgarage ? amountgarage : "",
-            amountorigin: amountorigin ? amountorigin : "",
-            unitprice: unitprice ? unitprice : "",
+            amount: isNaN(amount) ? "" : amount,
+            amountgarage: isNaN(amountgarage) ? "" : amountgarage,
+            amountorigin: isNaN(amountorigin) ? "" : amountorigin,
+            unitprice: isNaN(unitprice) ? "" : unitprice,
             items,
-            percent: percent ? percent : "",
+            percent: isNaN(percent) ? "" : percent,
         };
         if (nostatechange) {
             return obj;

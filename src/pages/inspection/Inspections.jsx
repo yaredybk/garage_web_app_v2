@@ -1,22 +1,18 @@
 import { useState } from "react";
 // import "./jobs.css";
 import { useEffectStateArrayData } from "../../hooks/EffectStateArrayData";
-import BasicTable from "../../components/tables/BasicTable";
 import { useNavigate } from "react-router-dom";
-import OverFlowAuto from "../../components/OverFlowAuto";
-import { ManageClientAndCar } from "../../components/ManageCarAndClient";
 import ClockBig from "../../components/ClockBig";
-import RenderPlate3 from "../../components/RenderPlate3";
-import RenderPlateJobs from "../../components/RenderPlateJobs";
 import ButtonSubmit from "../../components/button/ButtonSubmit";
 import IconSmall from "../../components/IconSmall";
 import BasicDialog from "../../components/dialog/BasicDialog";
 import NewCar from "../../features/cars/NewCar";
-import FoldedSection from "../../components/FoldedSection";
-import RenderCars from "../../features/cars/RenderCars";
 import RenderCarWithInspection from "../../features/cars/RenderCarWithInspection";
 import { openCloseModal } from "../../utils/userInterface";
 import RenderPlateInspection from "../../components/RenderPlateInspection";
+import FoldedSection from "../../components/FoldedSection";
+import RenderCars from "../../features/cars/RenderCars";
+import PageList_v1 from "../../layout/PageList_v1";
 
 export default function Inspections() {
     const jobTabs = ["appt", "pending", "finished", "next"];
@@ -63,32 +59,7 @@ export default function Inspections() {
         openCloseModal(idd, "open");
     }
     return (
-        <>
-            <BasicDialog id="newcar">
-                <NewCar
-                    openCar={(id) => {
-                        setcarInfo({ ...carInfo, idcar: id });
-                        openCloseModal("carwindow", "closeopen", "newcar");
-                    }}
-                />
-                {/* <FoldedSection title="recent cars">
-                    <RenderCars
-                        openCar={(id) => {
-                            setcarInfo({ ...carInfo, idcar: id });
-                            openCloseModal("carwindow", "closeopen", "newcar");
-                        }}
-                    />
-                </FoldedSection> */}
-            </BasicDialog>
-            <BasicDialog id="carwindow">
-                {carInfo.idcar && (
-                    <RenderCarWithInspection
-                        minimal={false}
-                        key={carInfo?.idcar}
-                        idcar={carInfo?.idcar}
-                    />
-                )}
-            </BasicDialog>
+        <main className="inspections">
             <div className="checkin min-[1024px]:p-2 grid    max-w-[63rem]  mx-auto ">
                 <div className="grid place-items-center max-sm:grid-cols-1 grid-cols-2 ">
                     <ClockBig />
@@ -97,7 +68,21 @@ export default function Inspections() {
                         + car
                     </ButtonSubmit>
                 </div>
-                <div className=" flex  gap-1 bg-gray-400 py-1  justify-center flex-wrap">
+                <PageList_v1 
+                list={list1}
+                info={{
+                    h1:"make",
+                    h12:"model",
+                    pre:"I",
+                    h2:"idinspection",
+                    h4:"created"
+                }}
+                id="idinspection"
+                openurl="/nav/inspections/payment/"
+
+
+                ></PageList_v1>
+                {/* <div className=" flex  gap-1 bg-gray-400 py-1  justify-center flex-wrap">
                     {list1?.map((obj, ind) => (
                         <RenderPlateInspection
                             datein={
@@ -110,11 +95,35 @@ export default function Inspections() {
                             plateobj={obj}
                         />
                     ))}
-                </div>
+                </div> */}
             </div>
-        </>
+            <BasicDialog id="newcar">
+                <NewCar
+                type={"inspection"}
+                    openCar={(id) => {
+                        setcarInfo({ ...carInfo, idcar: id });
+                        openCloseModal("carwindow", "closeopen", "newcar");
+                    }}
+                />
+                <FoldedSection title="recent inspection cars">
+                    <RenderCars  url="/api/getlist/car?frominspection=1" frominspection openCar={(id) => {
+                        setcarInfo({ ...carInfo, idcar: id });
+                        openCloseModal("carwindow", "closeopen", "newcar");
+                    }} />
+            </FoldedSection>
+            </BasicDialog>
+            <BasicDialog id="carwindow">
+                {carInfo.idcar && (
+                    <RenderCarWithInspection
+                        minimal={false}
+                        key={carInfo?.idcar}
+                        idcar={carInfo?.idcar}
+                    />
+                )}
+            </BasicDialog>
+        </main>
     );
     function openCheckinEditor(checkinId) {
-        navigate("/nav/job/" + checkinId);
+        navigate("/nav/jobs/edit/" + checkinId);
     }
 }

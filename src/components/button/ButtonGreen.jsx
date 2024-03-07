@@ -8,7 +8,7 @@ export default function ButtonGreen({ children, title, ...props }) {
         <button
             {...props}
             disabled={load}
-            className="mybtn green m-1 px-4  flex items-center justify-center gap-2"
+            className="mybtn green"
         >
             {children}
             {title} {load ? "..." : ""}

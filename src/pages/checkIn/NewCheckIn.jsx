@@ -71,12 +71,10 @@ export default function NewCheckIn() {
             const temp = document.getElementById("checkin_details");
             temp?.removeAttribute("open");
         }, 2000);
-    
-      return () => {
-        
-      }
-    }, [])
-    
+
+        return () => {};
+    }, []);
+
     useEffect(() => {
         if (data && data[0]) {
             // console.log(data);
@@ -273,7 +271,6 @@ export default function NewCheckIn() {
     }
 }
 export function EditDefect({ datadown, dataup = () => null }) {
-    if (!datadown.bodyname) return <h1>NO BODY NAME PROVIDED</h1>;
     const [newDefetData, setNewDefetData] = useState({
         // -1:not checked , 0:missing , 1:present
         status: datadown.status ? datadown.status : -1,
@@ -351,7 +348,9 @@ export function EditDefect({ datadown, dataup = () => null }) {
         setNewDefetData({ ...newDefetData, positions: [], defects: [] });
         dataup(newDefetData);
     }
-    return (
+    return !datadown.bodyname ? (
+        <h1 className="warning red">ERROR: NO BODY NAME PROVIDED</h1>
+    ) : (
         <div>
             <div className="flex gap-4 mx-auto items-center justify-center my-1">
                 <b className=" text-red-500">{datadown.bodyname}</b>

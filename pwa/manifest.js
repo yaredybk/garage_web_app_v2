@@ -62,20 +62,28 @@ export const manifest = {
         },
     ],
     share_target: {
-        action: "/share-target/",
+        action: "/api/share-target/",
         method: "POST",
         enctype: "multipart/form-data",
         params: {
             title: "title",
+            text: "text",
+            url: "url",
             files: [
                 {
-                    name: "fileup",
+                    name: "photo",
                     accept: [
                         "image/jpeg",
                         "image/png",
                         "image/jpg",
-                        "application/pdf",
+                        ".jpeg",
+                        ".png",
+                        ".jpg",
                     ],
+                },
+                {
+                    name: "pdf",
+                    accept: ["application/pdf", ".pdf"],
                 },
             ],
         },

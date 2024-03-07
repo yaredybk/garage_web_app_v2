@@ -3,7 +3,7 @@ import BasicForm from "../../components/form/BasicForm";
 import InputContainer from "../../components/input/InputContainer";
 import xaxios from "../../utils/xaxios";
 import { useEffectStateSingleData } from "../../hooks/EffectStateSingleData";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ButtonSubmit from "../../components/button/ButtonSubmit";
 import { LoadingState } from "../../context/LoadingContext";
 import BasicDialog from "../../components/dialog/BasicDialog";
@@ -16,6 +16,9 @@ import IconSmall from "../../components/IconSmall";
 import ButtonGreen from "../../components/button/ButtonGreen";
 import BreakLine from "../../components/BreakLine";
 import { openCloseModal } from "../../utils/userInterface";
+import RenderClient2 from "./RenderClient2";
+import ButtonAddCar from "./../../components/button/ButtonAddCar";
+import { useEffectStateArrayData } from "../../hooks/EffectStateArrayData";
 
 export default function RenderClient({
     clientid = 0,
@@ -23,23 +26,25 @@ export default function RenderClient({
     openAppt = null,
     userDataUp = () => null,
     minimal = false,
-    uploadData = () => null,
+    uploadData = undefined,
     noCreatedat = false,
+    clientinfoin = undefined,
 }) {
+    const navigate = useNavigate();
     let filteredData = null;
     const [info2, setInfo] = useState({ clientId: null, idcar: null });
     const { data } = useEffectStateSingleData(
-        "/api/getsingle/client?Id=" + clientid
-    );
-    const { load } = useContext(LoadingState);
+        !clientinfoin && "/api/getsingle/client?Id=" + clientid,
+        [clientinfoin],
+        !clientinfoin
+        );
     useEffect(() => {
-        if (!data) return;
+        if (!data || !uploadData) return;
         //   const filteredData = data[0];
         if (!filteredData) return;
         uploadData(filteredData);
     }, [data]);
 
-    // if (load) return <div>Loading ...</div>;
     if (!data) return <div>NODATA</div>;
     filteredData = data[0];
     if (!filteredData) return <div>NODATA</div>;
@@ -61,101 +66,41 @@ export default function RenderClient({
     return (
         <div className=" client grid gap-2">
             {minimal == "tiny" ? (
-                <span className="grid gap-1">
-                    <b>
-                        ({filteredData?.idclient}) {filteredData?.name}
-                    </b>
-                    <a
-                        href={"tel:" + filteredData?.phoneno}
-                        className=" bg-white px-2 rounded-md outline-1 outline outline-blue-600 "
-                    >
-                        {filteredData?.phoneno}
-                    </a>
-                </span>
+                <RenderClient2 clientobj={filteredData} />
             ) : (
-                <BasicForm
-                    onSubmit={userDataUp}
-                    formClass=" grid  gap-1  justify-center "
-                    className=" bg-opacity-20 max-w-fit   "
-                    title={
-                        <span className="flex items-center gap-1">
-                            <IconSmall src="/public/images/person2.png"></IconSmall>
-                            Client info
-                        </span>
-                    }
-                >
-                    <div className=" grid grid-cols-[1fr,3fr] gap-1 w-fit mx-auto ">
-                        <InputContainer htmlFor="id">
-                            <input
-                                type="text"
-                                name="idclient"
-                                className="  bg-white w-10 text-black border-none"
-                                value={filteredData.idclient}
-                                readOnly
-                            />
-                        </InputContainer>
-                        <InputContainer htmlFor="name">
-                            <input
-                                name="name"
-                                type="text"
-                                className="  bg-white text-black border-none"
-                                value={filteredData.name}
-                                readOnly
-                            />
-                        </InputContainer>
-                        <InputContainer className=" col-span-2" htmlFor="phone">
-                            <a
-                                href={"tel:" + filteredData.phoneno}
-                                className=" flex-1 px-4 py-1  print:hidden  justify-center flex gap-2 items-center "
-                            >
-                                <IconSmall
-                                    src="/public/call_1.svg"
-                                    alt="contact"
-                                />
-                                {filteredData.phoneno}
-                            </a>
-                        </InputContainer>
-                    </div>
-                    <BreakLine />
-                    {/* <ButtonSubmit>Get cars</ButtonSubmit> */}
-
-                    <FoldedSection title="New Appointment">
-                        <InputContainer htmlFor="apptdate">
-                            <input
-                                type="date"
-                                name="apptdate"
-                                id="apptdate"
-                                required
-                            />
-                        </InputContainer>
-                        <InputContainer htmlFor="appttime">
-                            <input
-                                type="time"
-                                name="appttime"
-                                id="appttime"
-                                defaultValue="08:00"
-                            />
-                        </InputContainer>
-                        <InputContainer htmlFor="note">
-                            <textarea
-                                rows={3}
-                                cols={30}
-                                name="note"
-                                id="note"
-                            />
-                        </InputContainer>
-                        <button
-                            type="submit"
-                            className="btn-blue h-fit my-auto"
+                <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-2  px-1  ">
+                    <RenderClient2 clientobj={filteredData} />
+                    <div className="grid gap-1">
+                        <ButtonSubmit
+                            className=" bg-blue-200"
+                            onClick={() => openModal(null, "new appointment")}
                         >
-                            + Add New Appointment
-                        </button>
-                    </FoldedSection>
-                </BasicForm>
+                            <IconSmall src="/public/images/appointment.png" />
+                            New appointment
+                        </ButtonSubmit>
+                        {minimal != "tiny" && (
+                            <ButtonAddCar
+                                title="add new car"
+                                className="bg-blue-200"
+                                onClick={() => openModal(null, "addcar")}
+                            />
+                        )}
+                        {!minimal && (
+                            <Link
+                                role="button"
+                                to={`/nav/clients/${filteredData.idclient}`}
+                                className="  bg-blue-200 "
+                            >
+                                <IconSmall src="/public/images/more.svg" />
+                                Open
+                            </Link>
+                        )}
+                    </div>
+                </div>
             )}
 
             {!minimal && (
-                <FoldedSection title={filteredData?.name + "'s cars"}>
+                <FoldedSection open title={filteredData?.name + "'s cars"}>
                     <RenderCars
                         key={info2?.idcar}
                         url={"/api/getlist/car?idclient=" + clientid}
@@ -165,9 +110,6 @@ export default function RenderClient({
                     />
                 </FoldedSection>
             )}
-            <ButtonSubmit onClick={() => openModal(null, "addcar")}>
-                + Add car
-            </ButtonSubmit>
             {minimal != "tiny" && (
                 <BasicDialog id="addcar">
                     <NewCar
@@ -189,21 +131,67 @@ export default function RenderClient({
                 {info2.idcar && (
                     <RenderCar
                         key={info2.idcar}
-                        minimal={true}
+                        minimal={"tiny"}
                         ui={"nolink"}
                         idcar={info2.idcar}
                     />
                 )}
-                <div className="">
+                <div className=" grid gap-2 grid-cols-2">
                     <ButtonGreen className=" " onClick={attachCar}>
-                        <IconSmall src="/public/images/link_1.svg" alt="" />
-                        Link Client
+                        <IconSmall
+                            className=" animate-bounce"
+                            src="/public/images/link_1.svg"
+                            alt=""
+                        />
+                        Link
                     </ButtonGreen>
                     <ButtonSubmitRed className="" onClick={dettachCar}>
                         <IconSmall src="/public/images/unlink_1.svg" alt="" />
-                        Unlink Client
+                        Unlink
                     </ButtonSubmitRed>
                 </div>
+            </BasicDialog>
+            <BasicDialog id="new appointment">
+                <BasicForm
+                    onSubmit={_addnewappointment}
+                    formClass=" grid grid-cols-[auto,auto] w-fit"
+                >
+                    <InputContainer className="hidden" title="id">
+                        <input
+                            type="number"
+                            name="idclient"
+                            id="idclient"
+                            value={clientid}
+                            readOnly
+                            className=" w-12"
+                        />
+                    </InputContainer>
+                    <InputContainer htmlFor="apptdate">
+                        <input
+                            type="date"
+                            name="apptdate"
+                            id="apptdate"
+                            required
+                        />
+                    </InputContainer>
+                    <InputContainer htmlFor="appttime">
+                        <input
+                            type="time"
+                            name="appttime"
+                            id="appttime"
+                            defaultValue="08:00"
+                        />
+                    </InputContainer>
+                    <InputContainer className=" col-span-2" htmlFor="note">
+                        <textarea rows={3} cols={30} name="note" id="note" />
+                    </InputContainer>
+                    <button
+                        type="submit"
+                        className="btn-blue col-span-2 h-fit my-auto"
+                    >
+                        + Add New Appointment
+                    </button>
+                </BasicForm>
             </BasicDialog>
         </div>
     );
@@ -230,6 +218,17 @@ export default function RenderClient({
                 // console.log(res);
                 setInfo({ ...info2, idcar: null });
                 openCloseModal("rendercardialog", "close");
+            })
+            .catch(console.log);
+    }
+    function _addnewappointment(datain) {
+        // console.log(datain);return;
+        xaxios
+            .post("/api/addnew/appt", datain)
+            .then((dd) => {
+                if (dd.insertId) {
+                    navigate("/nav/jobs?status=appt");
+                }
             })
             .catch(console.log);
     }

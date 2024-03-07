@@ -11,7 +11,7 @@ export default function CheckIn() {
     const [infoo, setInfo] = useState({ clientId: null, idcar: null });
     const { list1 } = useEffectStateArrayData("/api/getlist/checkin");
     return (
-        <div className="checkin">
+        <main className="checkin">
             <ManageClientAndCar minimal={true} />
             <div className=" bg-white  printgrid   gap-1  p-2 grid    max-w-[24cm]  mx-auto ">
                 <h2>Recent Check-in</h2>
@@ -23,11 +23,11 @@ export default function CheckIn() {
                     />
                 </OverFlowAuto>
             </div>
-        </div>
+        </main>
     );
     function openCheckinEditor(checkinId) {
         // console.log(checkinId);
-        navigate("newCheckIn/" + checkinId, { replace: true });
+        navigate("newCheckIn/" + checkinId);
     }
     function openModal(id, modalid) {
         if (!(id || modalid)) return;

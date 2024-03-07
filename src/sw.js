@@ -1,5 +1,4 @@
 var settings = { status: "local" };
-
 import { ExpirationPlugin } from "workbox-expiration";
 import { precacheAndRoute, createHandlerBoundToURL } from "workbox-precaching";
 import { NavigationRoute, registerRoute, Route } from "workbox-routing";
@@ -37,13 +36,13 @@ const cachinglists = [
         cacheName: "jobs_cache",
     },
     {
-        strategy: "CacheFirst",
+        strategy: "StaleWhileRevalidate",
         path: /\/files\/image\/cars/,
         cacheName: "image_cars_cache",
     },
     {
         strategy: "NetworkFirst",
-        path: /\/api\/getsingle\/car/,
+        path: /\/api\/getsingle\/cars/,
         cacheName: "cars_cache",
     },
     {
@@ -60,6 +59,11 @@ const cachinglists = [
         strategy: "NetworkFirst",
         path: /\/api\/getlist/,
         cacheName: "list_others_cache",
+    },
+    {
+        strategy: "NetworkFirst",
+        path: /\/api\/getsingle/,
+        cacheName: "single_items_cache",
     },
     {
         strategy: "CacheOnly",
@@ -87,7 +91,7 @@ registerRoute(
     // navigationRoutes
     new NavigationRoute(createHandlerBoundToURL("index.html"), {
         denylist: [/\/api/],
-        allowlist: [/^\/$/, /\/nav/],
+        allowlist: [/^\/$/, /\/nav\//],
     })
 );
 for (const ele of cachinglists) {
@@ -131,10 +135,10 @@ for (const ele of cachinglists) {
 
 self.addEventListener("push", NotificationManager);
 self.addEventListener("notificationclick", NotificationClickManager, false);
-self.navigator.connection.addEventListener("change", (event) => {
-    const connecType = self.navigator.connection;
-    console.log("connection change", connecType);
-});
+// self.navigator.connection.addEventListener("change", (event) => {
+//     const connecType = self.navigator.connection;
+//     console.log("connection change", connecType);
+// });
 self.addEventListener("message", hadleMessage);
 // self.addEventListener("install", (event) => {
 //     try {
@@ -148,29 +152,6 @@ self.addEventListener("message", hadleMessage);
 //     }
 // });
 
-// precache([
-
-//     // "/api/getlist/client",
-//     // "/api/getlist/appt",
-//     // "/api/getlist/car",
-//     // "/api/getlist/carbody",
-//     // "/api/getlist/list_region",
-//     // "/api/getlist/checkin",
-//     // "/api/getlist/jobtransaction/:id",
-//     // "/api/getlist/report/transactions",
-//     // "/api/getlist/transaction/history",
-//     // "/api/getlist/transaction/employees_balance",
-//     // "/api/getlist/transaction/internal_balance",
-//     // "/api/getlist/accounts",
-//     // "/api/getlist/stocks",
-// ]);
-
-// routes to be cached
-// "/api/getlist",
-// "/api/getsingle",
-// "/api/presets",
-// "/api/transaction",
-// "/api/notification",
 
 // A new route that matches same-origin image requests and handles
 // them with the cache-first, falling back to network strategy:

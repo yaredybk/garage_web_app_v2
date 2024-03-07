@@ -19,6 +19,8 @@ import IconSmall from "../../components/IconSmall";
 import BreakLine from "../../components/BreakLine";
 import FoldedSection from "../../components/FoldedSection";
 import RenderCars from "../../features/cars/RenderCars";
+import PageList_v1 from "../../layout/PageList_v1";
+import PageList_v2 from "../../layout/PageList_v2";
 export default function ManageClient() {
     const [carMake, setNameGender] = useState(null);
     const [idcar, setIdcar] = useState(null);
@@ -82,7 +84,7 @@ export default function ManageClient() {
     return (
         clientInfo.data &&
         clientInfo.data[0] && (
-            <div className=" grid grid-cols-[auto,auto] max-sm:grid-cols-1 gap-4 p-4">
+            <main className=" grid grid-cols-[auto,auto] max-sm:grid-cols-1 gap-4 p-4">
                 <BasicForm
                     formClass=" grid  gap-1  justify-center "
                     className=" bg-opacity-20 max-w-fit   "
@@ -159,26 +161,34 @@ export default function ManageClient() {
                         </button>
                     </FoldedSection>
                 </BasicForm>
+                <div className="grid gap-1">
+                    <ButtonSubmit onClick={editNameGender}>
+                        Edit Name / Gender
+                    </ButtonSubmit>
+                    <ButtonSubmit onClick={editPhoneno}>
+                        edit phone number
+                    </ButtonSubmit>
+                </div>
                 <FoldedSection
+                    className=" col-span-full"
                     open
                     title={clientInfo.data[0]?.name + "'s cars"}
                 >
-                    <RenderCars
-                        url={
-                            "/api/getlist/car?idclient=" +
-                            clientInfo.data[0].idclient
-                        }
-                        openCar={(id) => {
-                            openModal(id, "carwindow");
+                    <PageList_v2
+                        pagetype="car"
+                        info={{
+                            h1:"name",
+                            pre: "V",
+                            h2: "idcar",
+                            h3: "make",
+                            h32: "model",
                         }}
+                        openurl="/nav/cars/"
+                        id="idcar"
+                        nopaginate
+                        url={`/api/getlist?from=cars_view&filter=idclient='${clientInfo.data[0].idclient}'&useregexp=0`}
                     />
                 </FoldedSection>
-                <ButtonSubmit onClick={editNameGender}>
-                    Edit Name / Gender
-                </ButtonSubmit>
-                <ButtonSubmit onClick={editPhoneno}>
-                    edit phone number
-                </ButtonSubmit>
                 <BasicDialog id="edit phone number">
                     <BasicForm
                         formClass=" grid gap-2 place-items-center"
@@ -237,9 +247,11 @@ export default function ManageClient() {
                     </BasicForm>
                 </BasicDialog>
                 <BasicDialog id="carwindow">
+                    {idcar &&
                     <RenderCar key={idcar} idcar={idcar} />
+                    }
                 </BasicDialog>
-            </div>
+            </main>
         )
     );
     function openModal(id, modalid) {

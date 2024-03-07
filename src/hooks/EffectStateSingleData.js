@@ -1,25 +1,25 @@
 import { useContext, useEffect, useState } from "react";
 import { GetData } from "../utils/xaxios";
 import { LoadingState } from "../context/LoadingContext";
-export function useEffectStateSingleData(url = null, executeRefetch = null) {
+/**
+ * data fetching hook
+ * @param {string} url url link to fetch the data
+ * @param {any} datain initial data in
+ * @param {boolean} effect if true fetch data at useEffect
+ * @returns {data:any,setData:function,refetchData:function}
+ */
+export function useEffectStateSingleData(url = null, datain = undefined,effect=true) {
     const { setLoad } = useContext(LoadingState);
-    if (!url) {
-        return { data, setData: () => null, refetchData: () => null };
-    }
+    const [data, setData] = useState(datain);
+    // if (!url) {
+    //     return { data, setData: () => null, refetchData: () => null };
+    // }
     useEffect(() => {
-        refetchData();
+        if (url && effect) refetchData();
     }, [url]);
-
-    useEffect(() => {
-        executeRefetch && executeRefetch(() => refetchData);
-
-        return () => {};
-    }, []);
     function refetchData() {
-        GetData(url, setLoad).then((data) => {
-            setData(data);
-        });
+        if(url)
+        GetData(url, setLoad).then(setData).catch(console.warn);
     }
-    const [data, setData] = useState(undefined);
     return { data, setData, refetchData };
 }

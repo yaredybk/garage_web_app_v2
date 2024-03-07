@@ -36,7 +36,7 @@ export default function NewStockRegistration() {
         setRefetchState(Date.now());
     }
     return (
-        <div>
+        <main>
             <center className=" flex gap-3 mx-auto text-center justify-center">
                 <h3>New Account Registration</h3>
                 <button onClick={newItem} className="bg-green-400 px-4">
@@ -58,7 +58,7 @@ export default function NewStockRegistration() {
                     url={"/api/getlist/stocks"}
                 />
             </OverFlowAuto>
-        </div>
+        </main>
     );
     function newItem() {
         document.getElementById("New Stock form")?.reset();

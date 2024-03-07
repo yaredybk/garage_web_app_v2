@@ -5,16 +5,31 @@ import react from "@vitejs/plugin-react-swc";
 import { manifest } from "./pwa/manifest";
 
 // https://vitejs.dev/config/
+/** @type {import('vite').UserConfig} */
 export default defineConfig({
+    // appType:"mpa",
     build: {
-        // outDir: "dist",
+        outDir: "../garage_server_v2/dist",
+        emptyOutDir:true,
         // outDir:"public",
         // chunkSizeWarningLimit:"2000",
         reportCompressedSize: false,
+        // rollupOptions:{}
     },
     // appType: "spa",
     server: {
         port: 3040,
+        https: {
+            key: "../garage_server_v2/cert/cert_nov2023_daniel/server.key",
+            cert: "../garage_server_v2/cert/cert_nov2023_daniel/server.crt",
+        },
+        proxy: {
+            "^/(api|files)/.*": {
+                secure: false,
+                changeOrigin: true,
+                target: "https://localhost",
+            },
+        },
         // fs: {
         //     deny: ["dist/"],
         // },
@@ -24,6 +39,7 @@ export default defineConfig({
         VitePWA({
             strategies: "injectManifest",
             srcDir: "src",
+            outDir:"../garage_server_v2/dist",
             filename: "sw.js",
             injectRegister: null,
             manifest: manifest,

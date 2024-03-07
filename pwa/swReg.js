@@ -36,12 +36,7 @@ export function register(config) {
             const swUrl = `/sw.js`;
             console.log("configuring sw!");
             caches.delete("notification_chunks");
-            try {
-                caches.open("notification_chunks");
-            } catch (error) {
-                reject(error);
-                console.warn(error);
-            }
+            
 
             if (isLocalhost) {
                 // This is running on localhost. Let's check if a service worker still exists or not.
@@ -72,6 +67,19 @@ export function register(config) {
     else {
         // console.error("NODE_ENV !== production && serviceWorker in navigator");
         console.warn("Service worker Not installed", process.env.NODE_ENV);
+        window.addEventListener("load", () => {
+            const swUrl = `/sw_dev.js`;
+            console.log("configuring sw!");
+            caches.delete("notification_chunks");
+            
+
+            if (isLocalhost) {
+                checkValidServiceWorker(swUrl, config);
+            } else {
+                // Is not localhost. Just register service worker
+                registerValidSW(swUrl, config);
+            }
+        });
     }
 }
 
